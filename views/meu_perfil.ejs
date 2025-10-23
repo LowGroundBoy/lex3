@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= title %></title>
+    <style>
+      body {
+        margin: 0;
+        font: 13px Helvetica, Arial, sans-serif;
+      }
+      .error { color: red; }
+      .success { color: green; }
+
+      h1 {
+        text-align: center;
+      }
+      #fieldset {
+        text-align: center;
+        width: 400px;
+        max-width: 90%;
+        margin: 0 auto; 
+        background-color: white;
+        border-style: solid;
+        border-color: rgb(176, 176, 176);
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        padding: 20px;
+      }
+      .inputbox{
+        font-size: 130%;
+        padding: 7px;
+        background-color: rgb(226, 226, 226);
+        border-style: solid;
+        border-color: rgb(158, 158, 158);
+        border-radius: 14px;
+      }
+      .button {
+        font-size: 120%;
+        color: white;
+        padding: 10px;
+        width: 58%;
+        background-color: rgb(56, 151, 205);
+        border-style: solid;
+        border-color: rgb(45, 120, 163);
+        border-radius: 14px;
+        cursor: pointer;
+      }
+      .barra-superior {
+        background-color: #e4e4e4;
+        color: rgb(49, 146, 188);
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+      }
+      .barra-superior a {
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        margin-left: 15px;
+      }
+      .barra-superior a:hover {
+        text-decoration: underline;
+      }
+      .pagina{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 60px);
+        padding: 20px;
+       }
+      #foto_perfil{
+        height: 130px;
+        border-radius: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="barra-superior">
+        <h1>LEX3</h1>
+        <nav>
+            <a href="#">Início</a>
+            <a href="#">Meu Perfil</a>
+            <a href="#">Configurações</a>
+        </nav>
+    </header>
+
+    <div class="pagina">
+      <h1>Meu Perfil</h1>
+
+      <fieldset id="fieldset">
+        <img src="https://i.pinimg.com/474x/bc/8f/29/bc8f29c4183345bcc63bd4a161e88c71.jpg" id="foto_perfil">
+        <p>
+          <label for="nome">Nome</label><br>
+          <input type="text" name="nome" id="disciplina" class="inputbox" required>
+        </p>
+
+        <p>
+          <label for="matricula">Matricula</label><br>
+          <input type="text" name="matricula" id="matricula" class="inputbox" required>
+        </p>
+
+        <p>
+          <label for="data_nascimento">Data de Nascimento</label><br>
+          <input type="text" name="data_nascimento" id="data_nascimento" class="inputbox" required>
+        </p>
+
+        <p>
+          <button class="button">Editar perfil</button>
+        </p>
+
+      </fieldset>
+    </div>
+
+  </body>
+</html>

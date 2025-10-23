@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= title %></title>
+    <style>
+      body {
+        margin: 0;
+        font: 13px Helvetica, Arial, sans-serif;
+      }
+      .error { color: red; }
+      .success { color: green; }
+
+      h1 {
+        text-align: center;
+      }
+      #login_box {
+        text-align: center;
+        width: 400px;
+        max-width: 90%;
+        margin: 0 auto; 
+        background-color: white;
+        border-style: solid;
+        border-color: rgb(176, 176, 176);
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        padding: 20px;
+      }
+      .inputbox, #select_alunos {
+        font-size: 130%;
+        padding: 7px;
+        background-color: rgb(226, 226, 226);
+        border-style: solid;
+        border-color: rgb(158, 158, 158);
+        border-radius: 14px;
+      }
+      .button {
+        font-size: 120%;
+        color: white;
+        padding: 10px;
+        width: 58%;
+        background-color: rgb(56, 151, 205);
+        border-style: solid;
+        border-color: rgb(45, 120, 163);
+        border-radius: 14px;
+        cursor: pointer;
+      }
+      #lista_alunos {
+        margin-top: 15px;
+        text-align: left;
+        list-style-type: none;
+        padding-left: 0;
+      }
+      #lista_alunos li {
+        background-color: #f0f0f0;
+        margin: 5px 0;
+        padding: 6px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .remove-btn {
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 3px 6px;
+        cursor: pointer;
+      }
+      .barra-superior {
+        background-color: #e4e4e4;
+        color: rgb(49, 146, 188);
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+      }
+      .barra-superior a {
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        margin-left: 15px;
+      }
+      .barra-superior a:hover {
+        text-decoration: underline;
+      }
+      .pagina{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 60px);
+        padding: 20px;
+       }
+    </style>
+  </head>
+
+  <body>
+    <header class="barra-superior">
+        <h1>LEX3</h1>
+        <nav>
+            <a href="#">Início</a>
+            <a href="#">Meu Perfil</a>
+            <a href="#">Configurações</a>
+        </nav>
+    </header>
+
+    <div class="pagina">
+      <h1>Cadastro de Disciplina</h1>
+
+      <fieldset id="login_box">
+        <form method="post" action="/cadastrar-disciplina" onsubmit="return prepararEnvio()">
+          <p>
+            <label for="disciplina">Nome da Disciplina</label><br>
+            <input type="text" name="disciplina" id="disciplina" class="inputbox" required>
+          </p>
+
+          <p>
+            <label for="select_alunos">Adicionar alunos:</label><br>
+            <select id="select_alunos">
+              <option value="">-- Selecione um aluno --</option>
+              <option value="aluno1">Aluno 1</option>
+              <option value="aluno2">Aluno 2</option>
+              <option value="aluno3">Aluno 3</option>
+            </select>
+            <br><br>
+            <button type="button" class="button" onclick="adicionarAluno()">Adicionar aluno</button>
+          </p>
+
+          <ul id="lista_alunos"></ul>
+
+          <!-- campo oculto que sera enviado com a lista final -->
+          <input type="hidden" name="alunos" id="alunos_hidden">
+
+          <p>
+            <input type="submit" value="Cadastrar Disciplina" class="button">
+          </p>
+        </form>
+      </fieldset>
+    </div>
+
+    <script>
+      let alunosAdicionados = [];
+
+      function adicionarAluno() {
+        const select = document.getElementById("select_alunos");
+        const alunoSelecionado = select.value;
+        const nomeAluno = select.options[select.selectedIndex].text;
+
+        if (!alunoSelecionado) return alert("Selecione um aluno para adicionar!");
+        if (alunosAdicionados.includes(alunoSelecionado)) return alert("Esse aluno já foi adicionado!");
+
+        alunosAdicionados.push(alunoSelecionado);
+        atualizarLista();
+      }
+
+      function removerAluno(aluno) {
+        alunosAdicionados = alunosAdicionados.filter(a => a !== aluno);
+        atualizarLista();
+      }
+
+      function atualizarLista() {
+        const lista = document.getElementById("lista_alunos");
+        lista.innerHTML = "";
+
+        alunosAdicionados.forEach(aluno => {
+          const li = document.createElement("li");
+          li.textContent = aluno;
+
+          const btn = document.createElement("button");
+          btn.textContent = "Remover";
+          btn.className = "remove-btn";
+          btn.onclick = () => removerAluno(aluno);
+
+          li.appendChild(btn);
+          lista.appendChild(li);
+        });
+      }
+
+      function prepararEnvio() {
+        //coloca a lista de alunos no campo hidden
+        document.getElementById("alunos_hidden").value = JSON.stringify(alunosAdicionados);
+        return true; //permite o envio do form
+      }
+    </script>
+  </body>
+</html>
