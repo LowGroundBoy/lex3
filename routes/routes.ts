@@ -1,6 +1,7 @@
 import { Router, NextFunction, Request, Response } from "express";
 import { User } from "../types/user"; // retirar isso aqui depois de fazer a DB real
 import { authenticate, restrict } from "../src/auth"
+import models from '../database/models';
 
 const router = Router()
 

@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import path from "path";
 import routes from "../routes/routes"
+import mongoose from "mongoose";
 
 export const app = express();
 const port = 3001; // mudavel
@@ -33,6 +34,19 @@ app.use(function(req, res, next){
 app.use(routes);
 
 // ABRE O SERVER
-app.listen(port, () => {
+async function startServer(){
+  try{ 
+    await mongoose.connect('mongodb://127.0.0.1:27017/'); 
+
+    app.listen(port, () => {
     console.log(`Listening na porta ${port}`)
-});
+  });
+
+  } catch (error) { console.error(error) }
+}
+
+startServer()
+
+
+
+
