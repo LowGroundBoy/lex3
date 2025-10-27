@@ -11,11 +11,15 @@
   "dependencies": {
     "@types/express": "^5.0.3",
     "@types/express-session": "^1.18.2",
+    "bcrypt": "^6.0.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.2",
     "pbkdf2-password": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0"
   }
 }

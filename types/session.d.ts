@@ -1,10 +1,8 @@
 import "express-session";
-import { User } from "./user";
-
 declare module "express-session" {
     interface SessionData {
         user?: User;
         error?: string;
-        success?: string;
+        success_msg?: string;
     }
 }
