@@ -43,7 +43,7 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
             req.session.regenerate(function(){
                 req.session.user = username // TODO: checar se isso serve pra nova funcao de auth
                 req.session.success_msg = "Autenticado como " + username;
-                res.redirect(req.get('Referrer') || '/'); // volta pra pagina anterir ou /
+                res.redirect("/perfil"); // volta pra pagina anterir ou /
             });
         } 
         else {
@@ -51,6 +51,14 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
             res.redirect('/login')
         };
     });
+});
+
+router.get("/perfil", restrict, (req: Request, res: Response) => { // TODO: FAZER O PERFIL PUXAR DOS DADOS DO USUARIO LOGADO
+    res.render("meu_perfil", {title: "Perfil do usuário"})
+});
+
+router.get("/cadastro_disciplina", restrict, (req: Request, res: Response) => { // TODO: Permitir acesso só de professores
+    res.render("cadastro_disciplina", {title: "Cadastro de disciplinas"})
 });
 
 export default router;
