@@ -12,6 +12,11 @@ router.get('/', (req: Request, res: Response) =>{
 router.get("/register", (req: Request, res: Response) =>{ // NAO FAZ NADA AINDA
     res.render("registrar", { title: "Registrar"})
 });
+router.post("/register", (req: Request, res: Response, next: NextFunction) => {
+    if (!req.body) return res.sendStatus(400)
+
+    create_user()
+})
 
 // RESTRITO (TESTE)
 router.get("/restrito", restrict, (req: Request, res: Response) =>{     // teste de pagina restrita a login

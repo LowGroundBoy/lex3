@@ -32,3 +32,23 @@ export function restrict(req: Request, res: Response, next: NextFunction){
         res.redirect("/login");
     };
 }
+
+export async function create_user(
+    username: string, nome: string, 
+    password: string, 
+    type: "Aluno" | "Professor", 
+    semestre: number | null,
+    callback: (err: Error | null, msg: string | null) => void)
+{
+    const checkexist = await UserDB.findOne({username: username});
+    if (checkexist) return callback(null, "Username em uso.") // TODO: ver como Error funciona
+
+    switch (type){
+        case "Aluno": 
+            
+        case "Professor":
+
+        default:
+            return callback(null, "Tipo não selecionado")
+    }
+}
