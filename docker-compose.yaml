@@ -1,23 +1,24 @@
 services:
   mongo:
     image: docker.io/library/mongo:7
+    user: root
     container_name: mongo-local
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 123
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
-      - ./mongo-data:/data/db
+      - ./mongo-data:/data/db:Z
 
   app:
     build: .
     container_name: express-app
     restart: always
     ports:
-      - "3001:3001"
+      - "32456:3001"
     environment:
-      MONGO_URI: mongodb://admin:secret@mongo:27017/?authSource=admin
+      MONGO_URI: mongodb://admin:123@mongo:27017/?authSource=admin
     depends_on:
       - mongo

@@ -2,9 +2,11 @@ from pymongo import MongoClient
 from datetime import datetime
 import bcrypt
 
-client = MongoClient("mongodb://localhost:27017/")
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://admin:123@localhost:27018/admin")
 db = client["test"]
-users = db["users"]  # the collection created by Mongoose for UserDB
+users = db["users"]
 
 # hash password
 def hash_password(password):
