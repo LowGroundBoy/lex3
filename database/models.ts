@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Document, Types } from 'mongoose'
 const { Schema } = mongoose;
 
 // typescript, precisa das checagens de tipo, então tem que extender a classe padrão "Document"
@@ -13,6 +13,14 @@ interface IUser extends Document {
     get_profile(): object;
 }
 
+interface IDisciplina extends Document {
+    nomeDisciplina: string;
+    horario: string;
+    qtdAlunos: Number;
+    alunosCadastados: Types.ObjectId;
+    professorResponsavel: Types.ObjectId;
+}
+// USERS
 const userSchema = new Schema<IUser>({ // schema base, como se fosse a classe mais abstrata
     username: {type: String, unique: true}, 
     nome: {type: String, required: true},
@@ -44,13 +52,27 @@ userSchema.methods.get_profile = function(this: IUser) {
     } 
 }
 
-export const UserDB = mongoose.model('User', userSchema);
+// DISCIPLINAS
+const disciplinaSchema = new Schema<IDisciplina>({
+    nomeDisciplina: {type: String, unique: true},
+    horario: {type: String},
+    qtdAlunos: {type: Number},
+    alunosCadastados: [{type: Schema.Types.ObjectId, ref: "Aluno", unique: true, default: []}], // array de object IDS unicos
+    professorResponsavel: {type: Schema.Types.ObjectId, unique: true, default: null},
+})
 
+export const DisciplinasDB = mongoose.model('Disciplina', disciplinaSchema);
+
+export const UserDB = mongoose.model('User', userSchema);
+// PROFESSOR HERDA USERS
 export const Professor = UserDB.discriminator("Professor", new Schema({
     // material de aula, imagens? texto?
 }));
-
+// ALUNO HERDA USERS
 export const Aluno = UserDB.discriminator("Aluno", new Schema({
     semestre: Number,
     cadeirasMatriculadas: [{nomeCadeira: String, nota: Number}],
 }));
+
+
+
