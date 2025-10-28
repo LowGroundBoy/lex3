@@ -68,6 +68,7 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
 // PERFIL
 router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO: FAZER O PERFIL PUXAR DOS DADOS DO USUARIO LOGADO
     const userdoc = await UserDB.findById(req.session.user);
+    console.log(req.session.user)
     const profiledata = userdoc?.get_profile();
     
     res.render("meu_perfil", {title: "Perfil do usuário", profile: profiledata});

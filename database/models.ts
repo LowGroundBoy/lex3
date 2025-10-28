@@ -7,7 +7,7 @@ interface IUser extends Document {
     nome: string;
     hash: string;
     crDate: Date;
-    tipo?: string;
+    Tipo?: string;
     semestre?: number;
     cadeirasMatriculadas?: { nomeCadeira: string; nota: number }[];
     get_profile(): object;
@@ -18,18 +18,18 @@ const userSchema = new Schema<IUser>({ // schema base, como se fosse a classe ma
     nome: {type: String, required: true},
     hash: {type: String, required: true},
     crDate: {type: Date, default: Date.now},},  
-    { discriminatorKey: 'tipo' },
+    { discriminatorKey: 'Tipo' },
 );
 
 userSchema.methods.get_profile = function(this: IUser) {
-    if (this.tipo === "Professor"){
+    if (this.Tipo === "Professor"){
         return {
             username: this.username,
             nome: this.nome,
             crDate: this.crDate,
             // algo
         }
-    } else if (this.tipo === "Aluno"){
+    } else if (this.Tipo === "Aluno"){
         return {
             username: this.username,
             nome: this.nome,

@@ -15,8 +15,8 @@ export async function authenticate(input_username: string, input_password: strin
         console.log("match de usuario")
         const match = await bcrypt.compare(input_password, matched_user.hash);
         if (match) { 
-            console.log("retornando usuario: " + matched_user.toString())
-            return callback(null, matched_user.toString()); } 
+            console.log("retornando usuario: " + matched_user._id.toString())
+            return callback(null, matched_user._id.toString()); } 
     }
     else { 
         console.log("senha errada")
