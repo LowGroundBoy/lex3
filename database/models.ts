@@ -9,6 +9,26 @@ const userSchema = new Schema({ // schema base, como se fosse a classe mais abst
     { discriminatorKey: 'Tipo' },
 );
 
+userSchema.methods.get_profile = function() {
+    if (this.tipo === "Professor"){
+        return {
+            username: this.username,
+            nome: this.nome,
+            crDate: this.crDate,
+            // algo
+        }
+    } else if (this.tipo === "Aluno"){
+        return {
+            username: this.username,
+            nome: this.nome,
+            crDate: this.crDate,
+            semestre: this.semestre,
+            cadeiras: this.cadeirasMatriculadas
+        }
+    }
+    else { console.error("Usuário não possui discriminante"); } // deve nunca acontecer, mas vai que...
+}
+
 export const UserDB = mongoose.model('User', userSchema);
 
 export const Professor = userSchema.discriminator("Professor", new Schema({

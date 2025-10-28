@@ -1,5 +1,6 @@
 import { Router, NextFunction, Request, Response } from "express";
-import { authenticate, restrict } from "../src/auth"
+import { authenticate, restrict, create_user } from "../src/auth"
+
 
 const router = Router()
 
@@ -60,6 +61,8 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
 
 router.get("/perfil", restrict, (req: Request, res: Response) => { // TODO: FAZER O PERFIL PUXAR DOS DADOS DO USUARIO LOGADO
     res.render("meu_perfil", {title: "Perfil do usuário"})
+
+    get_profile(req.session.user as string)
 });
 
 router.get("/cadastro_disciplina", restrict, (req: Request, res: Response) => { // TODO: Permitir acesso só de professores

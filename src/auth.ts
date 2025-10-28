@@ -4,7 +4,8 @@ import { UserDB } from "../database/models";
 import { Document } from "mongoose";
 import bcrypt from "bcrypt"
 
-export async function authenticate(input_username: string, input_password: string, callback: (err: Error | null, user: string | null) => void) {
+export async function authenticate(input_username: string, input_password: string, callback: (err: Error | null, user: string | null) => void) 
+    {
     console.log("fazendo tentativas de login para usuario %s e com senha %s", input_username, input_password);
 
     const matched_user = await UserDB.findOne({username: input_username});
@@ -14,8 +15,8 @@ export async function authenticate(input_username: string, input_password: strin
         const matched_username: string = matched_user.get("username") as string;
         const match = await bcrypt.compare(input_password, matched_user.hash);
         if (match) { 
-            console.log("retornando usuario: " + matched_username)
-            return callback(null, matched_username); }
+            console.log("retornando usuario: " + matched_username) // TODO: isso aqui deveria retornar o documento completo, não só o username pra evitar retrabalhos
+            return callback(null, matched_username); } 
     }
     else { 
         console.log("senha errada")
@@ -38,10 +39,10 @@ export async function create_user(
     password: string, 
     type: "Aluno" | "Professor", 
     semestre: number | null,
-    callback: (err: Error | null, msg: string | null) => void)
+    callback: (msg: string | null) => void)
 {
     const checkexist = await UserDB.findOne({username: username});
-    if (checkexist) return callback(null, "Username em uso.") // TODO: ver como Error funciona
+    if (checkexist) return callback("Username em uso.") // TODO: ver como Error funciona
 
     switch (type){
         case "Aluno": 
@@ -49,6 +50,6 @@ export async function create_user(
         case "Professor":
 
         default:
-            return callback(null, "Tipo não selecionado")
+            return callback("Tipo não selecionado")
     }
 }
