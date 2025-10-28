@@ -36,7 +36,9 @@ app.use(routes);
 // ABRE O SERVER
 async function startServer(){
   try{ 
-    await mongoose.connect(process.env.MONGO_URI!);
+    await mongoose.connect('mongodb://127.0.0.1:27017/')
+    // se for rodar localmente (MONGODB instalado na máquina) usar 'mongodb://127.0.0.1:27017/'
+    // se for rodar no container: process.env.MONGO_URI!
 
     app.listen(port, () => {
     console.log(`Listening na porta ${port}`)
