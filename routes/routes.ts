@@ -1,5 +1,6 @@
 import { Router, NextFunction, Request, Response } from "express";
 import { authenticate, restrict, create_user } from "../src/auth"
+import { UserDB } from "../database/models";
 
 
 const router = Router()
@@ -16,13 +17,18 @@ router.get("/register", (req: Request, res: Response) =>{ // NAO FAZ NADA AINDA
 router.post("/register", (req: Request, res: Response, next: NextFunction) => {
     if (!req.body) return res.sendStatus(400)
 
-    create_user()
-})
+    create_user(req.body.username, req.body.nome, req.body.password, req.body.type, req.body.semestre, function(code, msg){
 
-// RESTRITO (TESTE)
-router.get("/restrito", restrict, (req: Request, res: Response) =>{     // teste de pagina restrita a login
-    res.send("PÁGINA RESTRITA, CLIQUE PARA <a href='/logout'>SAIR</a>");
-});
+        if (code === 1) {
+            req.session.success_msg = "Usuário criado com sucesso, faça login com a nova conta para continuar"
+            res.redirect("/login")
+        }
+        else { 
+            req.session.error = "Ocorreu um erro na criação de usuário"
+            res.redirect("/register")
+        }
+    })
+})
 
 // LOGOUT
 router.get("/logout", (req: Request, res: Response) => { // destroi a sessao do usuario pra deixar relogar
@@ -47,7 +53,7 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
         }
         else if (username){
             req.session.regenerate(function(){
-                req.session.user = username // TODO: checar se isso serve pra nova funcao de auth
+                req.session.user = username 
                 req.session.success_msg = "Autenticado como " + username;
                 res.redirect("/perfil"); // volta pra pagina anterir ou /
             });
@@ -59,12 +65,15 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-router.get("/perfil", restrict, (req: Request, res: Response) => { // TODO: FAZER O PERFIL PUXAR DOS DADOS DO USUARIO LOGADO
-    res.render("meu_perfil", {title: "Perfil do usuário"})
-
-    get_profile(req.session.user as string)
+// PERFIL
+router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO: FAZER O PERFIL PUXAR DOS DADOS DO USUARIO LOGADO
+    const userdoc = await UserDB.findById(req.session.user);
+    const profiledata = userdoc?.get_profile();
+    
+    res.render("meu_perfil", {title: "Perfil do usuário", profile: profiledata});
 });
 
+// CADASTRO DE DISCIPLINAS
 router.get("/cadastro_disciplina", restrict, (req: Request, res: Response) => { // TODO: Permitir acesso só de professores
     res.render("cadastro_disciplina", {title: "Cadastro de disciplinas"})
 });

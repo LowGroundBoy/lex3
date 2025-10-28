@@ -114,6 +114,14 @@
         </p>
 
       </fieldset>
+
+      <h1> EXEMPLO APAGAR DEPOIS!</h1>
+        <h1><%= profile.nome %></h1>
+        <p>Username: <%= profile.username %></p>
+        <p>Criação: <%= profile.crDate %></p>
+        <% if (profile.semestre) { %>
+          <p>Semestre: <%= profile.semestre %></p>
+        <% } %>
     </div>
 
   </body>

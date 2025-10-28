@@ -1,9 +1,10 @@
 import session from "express-session";
 import express, { NextFunction, Request, Response } from "express";
-import { UserDB } from "../database/models";
+import { Aluno, Professor, UserDB } from "../database/models";
 import { Document } from "mongoose";
 import bcrypt from "bcrypt"
 
+// AUTENTICAR SENHA
 export async function authenticate(input_username: string, input_password: string, callback: (err: Error | null, user: string | null) => void) 
     {
     console.log("fazendo tentativas de login para usuario %s e com senha %s", input_username, input_password);
@@ -12,18 +13,17 @@ export async function authenticate(input_username: string, input_password: strin
 
     if (matched_user){
         console.log("match de usuario")
-        const matched_username: string = matched_user.get("username") as string;
         const match = await bcrypt.compare(input_password, matched_user.hash);
         if (match) { 
-            console.log("retornando usuario: " + matched_username) // TODO: isso aqui deveria retornar o documento completo, não só o username pra evitar retrabalhos
-            return callback(null, matched_username); } 
+            console.log("retornando usuario: " + matched_user.toString())
+            return callback(null, matched_user.toString()); } 
     }
     else { 
         console.log("senha errada")
         return callback(null, null); }
 }
 
-// RESTRINGIR PAGINAS
+// RESTRINGIR PAGINAS TODO: EXPANDIR RESTRIÇÃO A TIPOS DE USUÁRIOS ALUNO/PROFESSOR
 export function restrict(req: Request, res: Response, next: NextFunction){
     if (req.session.user) {
         next(); // se o usuário está autenticado, continua
@@ -34,22 +34,41 @@ export function restrict(req: Request, res: Response, next: NextFunction){
     };
 }
 
+// CRIAR USUÁRIO
 export async function create_user(
-    username: string, nome: string, 
+    username: string, 
+    nome: string, 
     password: string, 
     type: "Aluno" | "Professor", 
     semestre: number | null,
-    callback: (msg: string | null) => void)
+    callback: (code: number, msg: string | null) => void)
 {
     const checkexist = await UserDB.findOne({username: username});
-    if (checkexist) return callback("Username em uso.") // TODO: ver como Error funciona
+    if (checkexist) return callback(0, "Username em uso.") // TODO: ver como Error funciona
 
     switch (type){
         case "Aluno": 
-            
-        case "Professor":
+            await Aluno.create({
+                tipo: "Aluno",
+                username: username,
+                nome: nome,
+                hash: bcrypt.hash(password, 12),
+                crDate: Date.now(),
+                semestre: semestre
+            })
 
+            return callback(1, `Usuário Aluno ${username} criado com sucesso`)
+        case "Professor":
+            await Professor.create({
+                tipo: "Professor",
+                username: username,
+                nome: nome,
+                hash: bcrypt.hash(password, 12),
+                crDate: Date.now(),
+            })
+
+            return callback(1, `Usuário Professor ${username} criado com sucesso`)
         default:
-            return callback("Tipo não selecionado")
+            return callback(0, "Tipo não selecionado")
     }
 }

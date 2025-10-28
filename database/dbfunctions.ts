@@ -5,7 +5,7 @@ function job_queue(){}
 export function disciplinas_handler(tipo: "criar" | "excluir"){
     switch (tipo){
         case "criar":
-
+            
         case "excluir":
 
         default:
