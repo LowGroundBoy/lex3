@@ -22,7 +22,7 @@ interface IDisciplina extends Document {
 }
 // USERS
 const userSchema = new Schema<IUser>({ // schema base, como se fosse a classe mais abstrata
-    username: {type: String, unique: true}, 
+    username: {type: String, required: true, unique: true}, 
     nome: {type: String, required: true},
     hash: {type: String, required: true},
     crDate: {type: Date, default: Date.now},},  

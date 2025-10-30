@@ -1,6 +1,7 @@
 import { Router, NextFunction, Request, Response } from "express";
-import { authenticate, restrict, create_user } from "../src/auth"
+import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth"
 import { UserDB } from "../database/models";
+import { disciplinas_handler } from "../database/dbfunctions"
 
 
 const router = Router()
@@ -46,7 +47,7 @@ router.get("/login", (req: Request, res: Response) => {
 router.post("/login", (req: Request, res: Response, next: NextFunction) => {
     if (!req.body) return res.sendStatus(400) // bad request
 
-    authenticate(req.body.username, req.body.password, function(err, username){
+    authenticate(req.body.username, req.body.password, function(err, username, acess){
         if (err){
             console.log(err);
             return next(err);
@@ -54,6 +55,7 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
         else if (username){
             req.session.regenerate(function(){
                 req.session.user = username 
+                req.session.accesslvl = acess
                 req.session.success_msg = "Autenticado como " + username;
                 res.redirect("/perfil"); // volta pra pagina anterir ou /
             });
@@ -75,8 +77,18 @@ router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO
 });
 
 // CADASTRO DE DISCIPLINAS
-router.get("/cadastro_disciplina", restrict, (req: Request, res: Response) => { // TODO: Permitir acesso só de professores
+router.get("/cadastro_disciplina", teacherRestrict, (req: Request, res: Response) => { // TODO: Permitir acesso só de professores
     res.render("cadastro_disciplina", {title: "Cadastro de disciplinas"})
 });
+router.post("/cadastro_disciplina", teacherRestrict, (req: Request, res: Response) => {
+    if (!req.body) return res.sendStatus(400);
 
+    disciplinas_handler(
+        req.body.nomedisciplina,
+        req.body.horario,
+        req.body.tipo,
+    )
+})
+
+// 
 export default router;

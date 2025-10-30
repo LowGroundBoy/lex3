@@ -1,6 +1,22 @@
 import { UserDB, Aluno, Professor, DisciplinasDB } from "./models"
 
+// funcoes internas
 function job_queue(){} // TODO: ver se vale a pena implementar isso
+
+async function count_totals(
+    tipo: "Alunos" | "Professores" | "Disciplinas"
+){
+    switch (tipo){
+        case "Alunos":
+            return await Aluno.countDocuments()
+        case "Professores":
+            return await Professor.countDocuments()
+        case "Disciplinas":
+            return await DisciplinasDB.countDocuments()
+        default:
+            throw new Error("Tip1o não selecionado");
+    }
+}
 
 export async function find_all(tipo: "Alunos" | "Professores" | "Todos"){ // TODO: talvez fazer um callback pra trabalhar com o sistema de notifs
     switch (tipo){
@@ -16,21 +32,20 @@ export async function find_all(tipo: "Alunos" | "Professores" | "Todos"){ // TOD
 }
 
 export async function disciplinas_handler(
-    nomeDisciplina: String,
-    horario: String,
-    id: string | null | undefined,
-    tipo: "criar" | "excluir") 
+    nomeDisciplina: String | undefined,
+    horario: String | undefined,
+    tipo: "criar" | "excluir") // TODO: fazer um callback aqui
     {
     switch (tipo){
         case "criar":
             DisciplinasDB.create({
                 nomeDisciplina: nomeDisciplina,
-                horario: horario,
+                horario: horario,   
                 qtdAlunos: 0,
                 // professor e matriculados é nenhum por default
             })
         case "excluir":
-            await DisciplinasDB.findByIdAndDelete(id);
+            await DisciplinasDB.findByIdAndDelete("nomeDisciplina");
             // return algo
         default:
             throw new Error("Tipo não selecionado");

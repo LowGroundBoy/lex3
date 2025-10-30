@@ -5,7 +5,10 @@ import { Document } from "mongoose";
 import bcrypt from "bcrypt"
 
 // AUTENTICAR SENHA
-export async function authenticate(input_username: string, input_password: string, callback: (err: Error | null, user: string | null) => void) 
+export async function authenticate(
+    input_username: string, 
+    input_password: string, 
+    callback: (err: Error | null, user: string | null, acess: string | null | undefined) => void) 
     {
     console.log("fazendo tentativas de login para usuario %s e com senha %s", input_username, input_password);
 
@@ -15,12 +18,12 @@ export async function authenticate(input_username: string, input_password: strin
         console.log("match de usuario")
         const match = await bcrypt.compare(input_password, matched_user.hash);
         if (match) { 
-            console.log("retornando usuario: " + matched_user._id.toString())
-            return callback(null, matched_user._id.toString()); } 
+            console.log("retornando usuario: " + matched_user.Tipo + matched_user._id!.toString())
+            return callback(null, matched_user._id!.toString(), matched_user.Tipo); } 
     }
     else { 
         console.log("senha errada")
-        return callback(null, null); }
+        return callback(null, null, null); }
 }
 
 // RESTRINGIR PAGINAS TODO: EXPANDIR RESTRIÇÃO A TIPOS DE USUÁRIOS ALUNO/PROFESSOR
@@ -31,6 +34,15 @@ export function restrict(req: Request, res: Response, next: NextFunction){
     else {
         req.session.error = "Acesso negado.";
         res.redirect("/login");
+    };
+}
+
+export function teacherRestrict(req: Request, res: Response, next: NextFunction){
+    if (req.session.accesslvl === "Professor") { next(); }
+    else { 
+        req.session.error = "Acesso negado.";
+        if (req.session.user) { res.redirect("/perfil"); }
+        else { res.redirect("/login") };
     };
 }
 
