@@ -34,17 +34,35 @@ app.use(function(req, res, next){
 app.use(routes);
 
 // ABRE O SERVER
-async function startServer(){
-  try{ 
-    await mongoose.connect("mongodb://127.0.0.1:27017/")
-    // se for rodar localmente (MONGODB instalado na máquina) usar 'mongodb://127.0.0.1:27017/'
-    // se for rodar no container: process.env.MONGO_URI!
+async function startServer() {
+  const localUri = "mongodb://127.0.0.1:27017/";
+  const containerUri = process.env.MONGO_URI;
 
-    app.listen(port, () => {
-    console.log(`Listening na porta ${port}`)
+  try {
+    // Tenta conectar localmente primeiro
+    await mongoose.connect(localUri);
+    console.log("Conectado ao MongoDB local");
+  } catch (localError) {
+    console.warn("Falha ao conectar localmente, tentando URI do container...");
+    
+    try {
+      // Se falhar, tenta conectar via URI do container
+      if (!containerUri) {
+        throw new Error("MONGO_URI não está definida nas variáveis de ambiente");
+      }
+      await mongoose.connect(containerUri);
+      console.log("Conectado ao MongoDB via container");
+    } catch (containerError) {
+      console.error("Falha ao conectar ao MongoDB:");
+      console.error("Erro local:", localError);
+      console.error("Erro container:", containerError);
+      process.exit(1);
+    }
+  }
+
+  app.listen(port, () => {
+    console.log(`Listening na porta ${port}`);
   });
-
-  } catch (error) { console.error(error) }
 }
 
 startServer()
