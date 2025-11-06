@@ -102,39 +102,20 @@
     <div class="pagina">
       <h1>Disciplinas</h1>
 
-     <fieldset id="fieldset">
-        <p>
-          <label class="info-label"><%= disciplina1.nome %></label><br>
-        </p>
-
-        <p>
-          <label class="info-label"><%= disciplina1.professor %></label><br>
-        </p>
-      </fieldset>
-
-      <br>
-      
-      <fieldset id="fieldset">
-          <p>
-            <label class="info-label"><%= disciplina2.nome %></label><br>
-          </p>
-
-          <p>
-            <label class="info-label"><%= disciplina2.professor %></label><br>
-          </p>
-        </fieldset>
-
-        <br>
-
+    <% if(todas_disciplinas) { %> 
+      <% for (let disciplina of todas_disciplinas) { %>
         <fieldset id="fieldset">
           <p>
-            <label class="info-label"><%= disciplina3.nome %></label><br>
+            <label class="info-label"><%= disciplina.nome %></label><br>
           </p>
-
           <p>
-            <label class="info-label"><%= disciplina3.professor %></label><br>
+            <label class="info-label"><%= disciplina.professor %></label><br>
           </p>
-        </fieldset>
+        </fieldset> 
+      <% } %>
+    <% } else { %>
+      <p>nothing to show here</p>
+    <% } %>
 
     </div>
 

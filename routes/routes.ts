@@ -1,7 +1,7 @@
 import { Router, NextFunction, Request, Response } from "express";
 import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth"
 import { UserDB } from "../database/models";
-import { disciplinas_handler } from "../database/dbfunctions"
+import { disciplinas_handler, find_all } from "../database/dbfunctions"
 
 
 const router = Router()
@@ -86,9 +86,21 @@ router.post("/cadastro_disciplina", teacherRestrict, (req: Request, res: Respons
     disciplinas_handler(
         req.body.nomedisciplina,
         req.body.horario,
-        req.body.tipo,
+        req.body.tipo, // valor retornado deve ser "criar" ou "excluir"
     )
 })
 
-// 
+// VISUALIZACAO DISCIPLINAS
+router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
+    const todas_disciplinas = await find_all("Disciplinas") // precisa declarar como async, ja que a funcao callada é
+    console.log(todas_disciplinas)
+
+    res.render("minhas_disciplinas", {title: "Minhas Disciplinas", todas_disciplinas: todas_disciplinas})
+})
+
+// MATERIAIS
+router.get("/materiais", restrict, async (req: Request, res: Response) => {
+
+    res.render("", {title: "Materiais de disciplina"}) // TODO: criar pagina de materiais
+})
 export default router;

@@ -18,14 +18,16 @@ async function count_totals(
     }
 }
 
-export async function find_all(tipo: "Alunos" | "Professores" | "Todos"){ // TODO: talvez fazer um callback pra trabalhar com o sistema de notifs
+export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | "Todos"){ // TODO: talvez fazer um callback pra trabalhar com o sistema de notifs
     switch (tipo){
         case "Alunos":
-            return await Aluno.find()
+            return await Aluno.find().exec()
         case "Professores":
-            return await Professor.find()
+            return await Professor.find().exec()
         case "Todos":
-            return await UserDB.find()
+            return await UserDB.find().exec()
+        case "Disciplinas":
+            return await DisciplinasDB.find().exec()
         default:
             throw new Error("Tipo não selecionado");
     }
