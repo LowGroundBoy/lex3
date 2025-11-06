@@ -8,7 +8,7 @@ import bcrypt from "bcrypt"
 export async function authenticate(
     input_username: string, 
     input_password: string, 
-    callback: (err: Error | null, user: string | null, acess: string | null | undefined) => void) 
+    callback: (err: Error | null, user: string | null, acess: string | null) => void) 
     {
     console.log("fazendo tentativas de login para usuario %s e com senha %s", input_username, input_password);
 
@@ -19,7 +19,7 @@ export async function authenticate(
         const match = await bcrypt.compare(input_password, matched_user.hash);
         if (match) { 
             console.log("retornando usuario: " + matched_user.Tipo + matched_user._id!.toString())
-            return callback(null, matched_user._id!.toString(), matched_user.Tipo); } 
+            return callback(null, matched_user._id!.toString(), matched_user.Tipo!); } 
     }
     else { 
         console.log("senha errada")

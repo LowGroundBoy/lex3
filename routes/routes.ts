@@ -55,7 +55,7 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
         else if (username){
             req.session.regenerate(function(){
                 req.session.user = username 
-                req.session.accesslvl = acess
+                req.session.accesslvl = acess!
                 req.session.success_msg = "Autenticado como " + username;
                 res.redirect("/perfil"); // volta pra pagina anterir ou /
             });
