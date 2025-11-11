@@ -1,4 +1,5 @@
-import { UserDB, Aluno, Professor, DisciplinasDB } from "./models"
+import { UserDB, Aluno, Professor, DisciplinasDB, MaterialDB } from "./models"
+import { Types } from "mongoose"
 
 // funcoes internas
 function job_queue(){} // TODO: ver se vale a pena implementar isso
@@ -54,13 +55,28 @@ export async function disciplinas_handler(
     }
 }
 
-export function editar_usuarios_disciplina(tipo: "matricular" | "remover"){
+export async function editar_usuarios_disciplina(
+    disciplinaIn: string,
+    alunoIn: string,
+    tipo: "matricular" | "remover")
+    {
+    const disciplina = await DisciplinasDB.findOne({nomeDisciplina: disciplinaIn});
+    const aluno = await Aluno.findOne({nome: alunoIn});
+
     switch (tipo){
-        case "matricular":
+        case "matricular":   
+            if (disciplina && aluno) { 
+                disciplina.alunosCadastrados.push(aluno._id as Types.ObjectId) // FIXME: ISSO AQUI VAI DAR MERDA
+                aluno.cadeirasMatriculadas!.push(disciplina._id as Types.ObjectId)
+            } 
+            else{ return } // TODO: escrever retorno
 
         case "remover":
-
+            if (disciplina && aluno) {
+                disciplina.alunosCadastrados = disciplina.alunosCadastrados.filter(
+                id => !id.equals(aluno._id as Types.ObjectId));
+            }
         default:
-
+            throw new Error("Tipo não selecionado");
     }
 }

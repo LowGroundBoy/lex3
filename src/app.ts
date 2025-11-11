@@ -33,6 +33,9 @@ app.use(function(req, res, next){
 
 app.use(routes);
 
+// UPLOAD CONFIG
+app.use("/files", express.static(path.join(__dirname, "../uploads")));
+
 // ABRE O SERVER
 async function startServer() {
   const localUri = "mongodb://127.0.0.1:27017/";

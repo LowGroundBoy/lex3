@@ -1,0 +1,15 @@
+<form action="/upload" method="POST" enctype="multipart/form-data">
+  <label>Disciplina:</label>
+  <select name="disciplinaID" required>
+    <% disciplinas.forEach(d => { %>
+      <option value="<%= d._id %>"><%= d.nome %> (<%= d._id %>)</option>
+    <% }) %>
+  </select><br><br>
+
+  <label>Arquivo (PDF ou vídeo):</label>
+  <input type="file" name="file" accept=".pdf,video/*" required><br><br>
+
+  <button type="submit">Enviar</button>
+</form>
+
+<%- message %>

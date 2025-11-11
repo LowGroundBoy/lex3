@@ -1,8 +1,9 @@
 import { Router, NextFunction, Request, Response } from "express";
 import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth"
-import { UserDB } from "../database/models";
-import { disciplinas_handler, find_all } from "../database/dbfunctions"
-
+import { DisciplinasDB, UserDB, MaterialDB } from "../database/models";
+import { disciplinas_handler, find_all } from "../database/dbfunctions";
+import multer from "multer";
+import { upload } from "../src/multerconfig";
 
 const router = Router()
 
@@ -98,9 +99,42 @@ router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) 
     res.render("minhas_disciplinas", {title: "Minhas Disciplinas", todas_disciplinas: todas_disciplinas})
 })
 
-// MATERIAIS
+// MATERIAIS VISUALIZAÇÃO
 router.get("/materiais", restrict, async (req: Request, res: Response) => {
 
-    res.render("", {title: "Materiais de disciplina"}) // TODO: criar pagina de materiais
+    res.render("materiais", {title: "Materiais de disciplina"}) // TODO: criar pagina de materiais
 })
+
+// UPLOAD MATERIAIS
+router.get("/upload", teacherRestrict, async (req: Request, res: Response) => {
+  const disciplinas = await find_all("Disciplinas")
+
+  res.render("upload", { title: "Upload de materiais", disciplinas })
+})
+
+router.post("/upload", teacherRestrict, upload.single("file"), async (req: Request, res: Response) => { // da pra usar varias funcoes antes de rodar o endpoint EXEMPLO AQUI <
+    if (!req.body) return res.sendStatus(400);
+    if (!req.file) return res.sendStatus(400);
+
+    const { disciplinaID } = req.body;
+    const disciplina = await DisciplinasDB.findById(disciplinaID);
+    if (!disciplina) { return res.status(404).send("Disciplina not found"); }
+
+    const mime = req.file.mimetype;
+    let tipo: "video" | "pdf";
+    if (mime.startsWith("video/")) { tipo = "video"; }
+    else if (mime === "application/pdf" || mime.includes("pdf")) { tipo = "pdf"; }
+    else { return res.status(404).send("Tipo não suportado"); } // deve nunca acontecer, tem que falhar antes no filtro de arquivo;
+
+    await MaterialDB.create({
+        disciplina: disciplina._id,
+        tipo,
+        filename: req.file.filename,
+        path: req.file.path,
+    })
+
+    req.session.success_msg = "Upload concluído"
+    res.redirect("/upload");
+})
+
 export default router;
