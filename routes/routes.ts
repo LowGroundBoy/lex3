@@ -78,9 +78,14 @@ router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO
 });
 
 // CADASTRO DE DISCIPLINAS
-router.get("/cadastro_disciplina", teacherRestrict, (req: Request, res: Response) => { // TODO: Permitir acesso só de professores
-    res.render("cadastro_disciplina", {title: "Cadastro de disciplinas"})
+router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => { 
+const alunos = await find_all("Alunos"); // pega os alunos do banco
+res.render("cadastro_disciplina", {
+    title: "Cadastro de disciplinas",
+    alunos // envia para o EJS
 });
+});
+
 router.post("/cadastro_disciplina", teacherRestrict, (req: Request, res: Response) => {
     if (!req.body) return res.sendStatus(400);
 
@@ -89,6 +94,7 @@ router.post("/cadastro_disciplina", teacherRestrict, (req: Request, res: Respons
         req.body.horario,
         req.body.tipo, // valor retornado deve ser "criar" ou "excluir"
     )
+
 })
 
 // VISUALIZACAO DISCIPLINAS

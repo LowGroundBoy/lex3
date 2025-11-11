@@ -106,12 +106,18 @@
       <% for (let disciplina of todas_disciplinas) { %>
         <fieldset id="fieldset">
           <p>
-            <label class="info-label"><%= disciplina.nome %></label><br>
+            <label class="info-label">
+              <strong>Disciplina:</strong> <%= disciplina.nomeDisciplina %>
+            </label>
           </p>
           <p>
-            <label class="info-label"><%= disciplina.professor %></label><br>
+            <label class="info-label">
+              <strong>Professor:</strong> 
+              <%= disciplina.professorResponsavel ? disciplina.professorResponsavel.nome : "Sem professor" %>
+            </label>
           </p>
         </fieldset> 
+        <br>
       <% } %>
     <% } else { %>
       <p>nothing to show here</p>

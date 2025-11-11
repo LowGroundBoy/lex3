@@ -112,10 +112,24 @@
       <h1>Cadastro de Disciplina</h1>
 
       <fieldset id="login_box">
-        <form method="post" action="/cadastrar-disciplina" onsubmit="return prepararEnvio()">
+        <form method="post" action="/cadastro_disciplina" onsubmit="return prepararEnvio()">
           <p>
             <label for="disciplina">Nome da Disciplina</label><br>
-            <input type="text" name="disciplina" id="disciplina" class="inputbox" required>
+            <input type="text" name="nomedisciplina" id="nomedisciplina" class="inputbox" required>
+          </p>
+
+          <p>
+            <label for="disciplina">Horário</label><br>
+            <input type="text" name="horario" id="horario" class="inputbox" required>
+          </p>
+
+          <p>
+            <label for="tipo">Tipo:</label><br>
+            <select name="tipo" id="tipo" class="inputbox" required>
+              <option value="">-- Selecione o tipo --</option>
+              <option value="criar">Criar</option>
+              <option value="excluir">Excluir</option>
+            </select>
           </p>
 
           <p>
@@ -123,9 +137,9 @@
             <select id="select_alunos">
               <option value="">-- Selecione um aluno --</option>
               <!-- TODO: PUXAR ALUNOS DO BANCO -->
-              <option value="aluno1">Aluno 1</option> 
-              <option value="aluno2">Aluno 2</option>
-              <option value="aluno3">Aluno 3</option>
+              <% alunos.forEach(aluno => {%>
+                <option value="<%= aluno._id %>"><%= aluno.nome %></option>
+              <% }) %>
             </select>
             <br><br>
             <button type="button" class="button" onclick="adicionarAluno()">Adicionar aluno</button>
@@ -144,48 +158,50 @@
     </div>
 
     <script>
-      let alunosAdicionados = [];
+        let alunosAdicionados = []; 
 
-      function adicionarAluno() {
-        const select = document.getElementById("select_alunos");
-        const alunoSelecionado = select.value;
-        const nomeAluno = select.options[select.selectedIndex].text;
+        function adicionarAluno() {
+          const select = document.getElementById("select_alunos");
+          const alunoSelecionado = select.value; 
+          const nomeAluno = select.options[select.selectedIndex].text; 
 
-        if (!alunoSelecionado) return alert("Selecione um aluno para adicionar!");
-        if (alunosAdicionados.includes(alunoSelecionado)) return alert("Esse aluno já foi adicionado!");
+          if (!alunoSelecionado) return alert("Selecione um aluno para adicionar!");
+          if (alunosAdicionados.some(a => a.id === alunoSelecionado)) 
+              return alert("Esse aluno já foi adicionado!");
 
-        alunosAdicionados.push(alunoSelecionado);
-        atualizarLista();
-      }
+          alunosAdicionados.push({ id: alunoSelecionado, nome: nomeAluno });
+          atualizarLista();
+        }
 
-      function removerAluno(aluno) {
-        alunosAdicionados = alunosAdicionados.filter(a => a !== aluno);
-        atualizarLista();
-      }
+        function removerAluno(alunoId) {
+          alunosAdicionados = alunosAdicionados.filter(a => a.id !== alunoId);
+          atualizarLista();
+        }
 
-      function atualizarLista() {
-        const lista = document.getElementById("lista_alunos");
-        lista.innerHTML = "";
+        function atualizarLista() {
+          const lista = document.getElementById("lista_alunos");
+          lista.innerHTML = "";
 
-        alunosAdicionados.forEach(aluno => {
-          const li = document.createElement("li");
-          li.textContent = aluno;
+          alunosAdicionados.forEach(aluno => {
+            const li = document.createElement("li");
+            li.textContent = aluno.nome; 
 
-          const btn = document.createElement("button");
-          btn.textContent = "Remover";
-          btn.className = "remove-btn";
-          btn.onclick = () => removerAluno(aluno);
+            const btn = document.createElement("button");
+            btn.textContent = "Remover";
+            btn.className = "remove-btn";
+            btn.onclick = () => removerAluno(aluno.id);
 
-          li.appendChild(btn);
-          lista.appendChild(li);
-        });
-      }
+            li.appendChild(btn);
+            lista.appendChild(li);
+          });
+        }
 
-      function prepararEnvio() {
-        //coloca a lista de alunos no campo hidden
-        document.getElementById("alunos_hidden").value = JSON.stringify(alunosAdicionados);
-        return true; //permite o envio do form
-      }
+        function prepararEnvio() {
+          // envia apenas os IDs para o backend
+          document.getElementById("alunos_hidden").value = JSON.stringify(alunosAdicionados.map(a => a.id));
+          return true;
+        }
+
     </script>
   </body>
 </html>
