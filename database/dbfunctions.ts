@@ -28,7 +28,9 @@ export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | 
         case "Todos":
             return await UserDB.find().exec()
         case "Disciplinas":
-            return await DisciplinasDB.find().exec()
+            return await DisciplinasDB.find()
+                .populate('professorResponsavel', 'nome') // popula só o campo nome do professor
+                .exec()
         default:
             throw new Error("Tipo não selecionado");
     }
