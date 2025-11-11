@@ -17,11 +17,13 @@
     "express-session": "^1.18.2",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.2",
+    "multer": "^2.0.2",
     "pbkdf2-password": "^1.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/mongoose": "^5.11.96",
+    "@types/multer": "^2.0.0",
     "tsx": "^4.20.6"
   }
 }
