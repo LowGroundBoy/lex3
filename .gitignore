@@ -28,3 +28,6 @@ Thumbs.db
 
 # MONGO
 mongo-data/
+
+# UPLOAD FOLDER
+uploads/
