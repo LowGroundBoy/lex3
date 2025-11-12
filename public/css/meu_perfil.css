@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title><%= title %></title>
-    <style>
-      body {
+  body {
         margin: 0;
         font: 13px Helvetica, Arial, sans-serif;
       }
@@ -86,30 +79,3 @@
         width: 80%;
         margin-bottom: 15px;
       }
-    </style>
-  </head>
-
-  <body>
-    
-    <%- include("partials/header") %>
-
-    <div class="pagina">
-      <h1>Material</h1>
-
-     <fieldset id="fieldset">
-        <p>
-          <label class="info-label"><%=  %></label><br>
-        </p>
-
-        <iframe
-          src="https://www.ic.unicamp.br/~ducatte/mc102/aula23.pdf"
-          style="width:100%; height:80vh; border:1px solid #ccc;">
-        </iframe>
-      </fieldset>
-
-      <br>
-
-    </div>
-
-  </body>
-</html>

@@ -107,7 +107,7 @@ router.get("/editar_turma", teacherRestrict, async (req: Request, res: Response)
     res.render("editar_turma", { title: "Editar turmas", disciplinaSelecionada, alunosTurma, disciplinas })
 })
 
-router.post("/editar_turma"), teacherRestrict, async (req: Request, res: Response) => {
+router.post("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
 
     editar_usuarios_disciplina(
         req.body.selecaoDisciplina,
@@ -116,7 +116,7 @@ router.post("/editar_turma"), teacherRestrict, async (req: Request, res: Respons
     )
 
     res.redirect("/editar_turma")
-}
+})
 
 // VISUALIZACAO TODAS DISCIPLINAS
 router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) => {

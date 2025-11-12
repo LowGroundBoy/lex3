@@ -4,109 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= title %></title>
-    <style>
-      body {
-        margin: 0;
-        font: 13px Helvetica, Arial, sans-serif;
-      }
-      .error { color: red; }
-      .success { color: green; }
-
-      h1 {
-        text-align: center;
-      }
-      #login_box {
-        text-align: center;
-        width: 400px;
-        max-width: 90%;
-        margin: 0 auto; 
-        background-color: white;
-        border-style: solid;
-        border-color: rgb(176, 176, 176);
-        border-radius: 10px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
-        padding: 20px;
-      }
-      .inputbox, #select_alunos {
-        font-size: 130%;
-        padding: 7px;
-        background-color: rgb(226, 226, 226);
-        border-style: solid;
-        border-color: rgb(158, 158, 158);
-        border-radius: 14px;
-      }
-      .button {
-        font-size: 120%;
-        color: white;
-        padding: 10px;
-        width: 58%;
-        background-color: rgb(56, 151, 205);
-        border-style: solid;
-        border-color: rgb(45, 120, 163);
-        border-radius: 14px;
-        cursor: pointer;
-      }
-      #lista_alunos {
-        margin-top: 15px;
-        text-align: left;
-        list-style-type: none;
-        padding-left: 0;
-      }
-      #lista_alunos li {
-        background-color: #f0f0f0;
-        margin: 5px 0;
-        padding: 6px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .remove-btn {
-        background: red;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 3px 6px;
-        cursor: pointer;
-      }
-      .barra-superior {
-        background-color: #e4e4e4;
-        color: rgb(49, 146, 188);
-        height: 60px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
-      }
-      .barra-superior a {
-        color: rgb(0, 0, 0);
-        text-decoration: none;
-        margin-left: 15px;
-      }
-      .barra-superior a:hover {
-        text-decoration: underline;
-      }
-      .pagina{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: calc(100vh - 60px);
-        padding: 20px;
-       }
-    </style>
+    <link rel="stylesheet" href="/css/cadastro_disciplina.css">
   </head>
 
   <body>
-    <header class="barra-superior">
-        <h1>LEX3</h1>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/perfil">Meu Perfil</a>
-            <a href="/cadastro_disciplina">Cadastro Disciplina</a>
-        </nav>
-    </header>
+    
+    <%- include("partials/header") %>
 
     <%- message %>
 
