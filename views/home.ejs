@@ -4,61 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-      body {
-        margin: 0;
-        font: 13px Helvetica, Arial, sans-serif;
-        }
-
-    .button{
-        font-size: 120%;
-        color: white;
-        padding: 10px;
-        width: 58%;
-        background-color: rgb(56, 151, 205);
-        border-style: solid;
-        border-color:rgb(45, 120, 163);
-        border-radius: 14px;
-      }
-
-    .barra-superior {
-        background-color: #e4e4e4;
-        color: rgb(49, 146, 188);
-        height: 60px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
-    }
-    .barra-superior a {
-        color: rgb(0, 0, 0);
-        text-decoration: none;
-        margin-left: 15px;
-    }
-    .barra-superior a:hover {
-        text-decoration: underline;
-    }
-    .pagina{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: calc(100vh - 60px);
-        padding: 20px;
-    }
-    </style>
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
 
-    <header class="barra-superior">
-        <h1>LEX3</h1>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/perfil">Meu Perfil</a>
-            <a href="/cadastro_disciplina">Cadastro Disciplina</a>
-        </nav>
-    </header>
+    <%- include("partials/header") %>
 
     <div class="pagina">
         <button class="button" onclick="location.href='/login'">Ir para Login</button><br>

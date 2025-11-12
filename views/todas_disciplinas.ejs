@@ -4,18 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= title %></title>
-    <link rel="stylesheet" href="/css/minhas_disciplinas.css">
+    <link rel="stylesheet" href="/css/todas_disciplinas.css"> 
   </head>
 
   <body>
-    
+   
     <%- include("partials/header") %>
 
     <div class="pagina">
       <h1>Disciplinas</h1>
 
-    <% if(minhas_disciplinas) { %> 
-      <% for (let disciplina of minhas_disciplinas) { %>
+    <% if(todas_disciplinas) { %> 
+      <% for (let disciplina of todas_disciplinas) { %>
         <fieldset id="fieldset">
           <p>
             <label class="info-label">

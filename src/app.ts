@@ -32,6 +32,7 @@ app.use(function(req, res, next){
 });
 
 app.use(routes);
+app.use(express.static("public")); // CSS e JS pra paginas
 
 // UPLOAD CONFIG
 app.use("/files", express.static(path.join(__dirname, "../uploads")));

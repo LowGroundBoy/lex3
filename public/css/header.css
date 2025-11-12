@@ -1,0 +1,18 @@
+    .barra-superior {
+        background-color: #e4e4e4;
+        color: rgb(49, 146, 188);
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+    }
+    .barra-superior a {
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        margin-left: 15px;
+    }
+    .barra-superior a:hover {
+        text-decoration: underline;
+    }

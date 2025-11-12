@@ -1,7 +1,7 @@
 import { Router, NextFunction, Request, Response } from "express";
 import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth"
-import { DisciplinasDB, UserDB, MaterialDB } from "../database/models";
-import { disciplinas_handler, find_all } from "../database/dbfunctions";
+import { DisciplinasDB, UserDB, MaterialDB, Aluno } from "../database/models";
+import { disciplinas_handler, find_all, editar_usuarios_disciplina } from "../database/dbfunctions";
 import multer from "multer";
 import { upload } from "../src/multerconfig";
 
@@ -79,9 +79,7 @@ router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO
 
 // CADASTRO DE DISCIPLINAS
 router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
-res.render("cadastro_disciplina", {
-        title: "Cadastro de disciplinas",
-});
+res.render("cadastro_disciplina", { title: "Cadastro de disciplinas" });
 });
 
 router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
@@ -99,18 +97,47 @@ router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: R
     res.render("cadastro_disciplina", {title: "Cadastro de disciplinas",})
 })
 
-// VISUALIZACAO DISCIPLINAS
-router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
-    const todas_disciplinas = await find_all("Disciplinas") // precisa declarar como async, ja que a funcao callada é
-    console.log(todas_disciplinas)
+// EDICAO DISCIPLINAS
+router.get("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
+    const disciplinaSelecionada = null
+    const alunosTurma = null
 
-    res.render("minhas_disciplinas", {title: "Minhas Disciplinas", todas_disciplinas: todas_disciplinas})
+    const disciplinas = await find_all("Disciplinas")
+
+    res.render("editar_turma", { title: "Editar turmas", disciplinaSelecionada, alunosTurma, disciplinas })
 })
+
+router.post("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
+
+    editar_usuarios_disciplina(
+        req.body.selecaoDisciplina,
+        req.body.selecaoAluno,
+        req.body.tipo
+    )
+
+    res.redirect("/editar_turma")
+})
+
+// VISUALIZACAO TODAS DISCIPLINAS
+router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) => {
+    const todas_disciplinas = await find_all("Disciplinas") // precisa declarar como async, ja que a funcao callada é
+
+    res.render("todas_disciplinas", { title: "Todas Disciplinas", todas_disciplinas })
+})
+
+// VISUALIZACAO MINHAS DISCIPLINAS
+router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
+    const alunoatual = req.session.user
+    const minhas_disciplinas = await Aluno.findById(alunoatual).populate("cadeirasMatriculadas").exec();
+
+    res.render("minhas_disciplinas", { title: "Minhas Disciplinas", minhas_disciplinas })
+})
+
 
 // MATERIAIS VISUALIZAÇÃO
 router.get("/materiais", restrict, async (req: Request, res: Response) => {
 
-    res.render("materiais", {title: "Materiais de disciplina"}) // TODO: criar pagina de materiais
+    res.render("materiais", { title: "Materiais de disciplina" }) // TODO: criar pagina de materiais
 })
 
 // UPLOAD MATERIAIS
