@@ -3,7 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 import bcrypt
 
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb://admin:123@localhost:27018/admin")
 db = client["test"]
 
 users = db["users"]

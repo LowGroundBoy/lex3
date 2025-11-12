@@ -49,9 +49,10 @@ export async function disciplinas_handler(
                 qtdAlunos: 0,
                 // professor e matriculados é nenhum por default
             })
+            return true
         case "excluir":
             await DisciplinasDB.findByIdAndDelete("nomeDisciplina");
-            // return algo
+            return true
         default:
             throw new Error("Tipo não selecionado");
     }

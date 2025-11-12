@@ -108,6 +108,8 @@
         </nav>
     </header>
 
+    <%- message %>
+
     <div class="pagina">
       <h1>Cadastro de Disciplina</h1>
 
@@ -133,75 +135,11 @@
           </p>
 
           <p>
-            <label for="select_alunos">Adicionar alunos:</label><br>
-            <select id="select_alunos">
-              <option value="">-- Selecione um aluno --</option>
-              <!-- TODO: PUXAR ALUNOS DO BANCO -->
-              <% alunos.forEach(aluno => {%>
-                <option value="<%= aluno._id %>"><%= aluno.nome %></option>
-              <% }) %>
-            </select>
-            <br><br>
-            <button type="button" class="button" onclick="adicionarAluno()">Adicionar aluno</button>
-          </p>
-
-          <ul id="lista_alunos"></ul>
-
-          <!-- campo oculto que sera enviado com a lista final -->
-          <input type="hidden" name="alunos" id="alunos_hidden">
-
-          <p>
             <input type="submit" value="Cadastrar Disciplina" class="button">
           </p>
         </form>
       </fieldset>
     </div>
 
-    <script>
-        let alunosAdicionados = []; 
-
-        function adicionarAluno() {
-          const select = document.getElementById("select_alunos");
-          const alunoSelecionado = select.value; 
-          const nomeAluno = select.options[select.selectedIndex].text; 
-
-          if (!alunoSelecionado) return alert("Selecione um aluno para adicionar!");
-          if (alunosAdicionados.some(a => a.id === alunoSelecionado)) 
-              return alert("Esse aluno já foi adicionado!");
-
-          alunosAdicionados.push({ id: alunoSelecionado, nome: nomeAluno });
-          atualizarLista();
-        }
-
-        function removerAluno(alunoId) {
-          alunosAdicionados = alunosAdicionados.filter(a => a.id !== alunoId);
-          atualizarLista();
-        }
-
-        function atualizarLista() {
-          const lista = document.getElementById("lista_alunos");
-          lista.innerHTML = "";
-
-          alunosAdicionados.forEach(aluno => {
-            const li = document.createElement("li");
-            li.textContent = aluno.nome; 
-
-            const btn = document.createElement("button");
-            btn.textContent = "Remover";
-            btn.className = "remove-btn";
-            btn.onclick = () => removerAluno(aluno.id);
-
-            li.appendChild(btn);
-            lista.appendChild(li);
-          });
-        }
-
-        function prepararEnvio() {
-          // envia apenas os IDs para o backend
-          document.getElementById("alunos_hidden").value = JSON.stringify(alunosAdicionados.map(a => a.id));
-          return true;
-        }
-
-    </script>
-  </body>
+  </body> 
 </html>

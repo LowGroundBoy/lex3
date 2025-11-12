@@ -78,23 +78,25 @@ router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO
 });
 
 // CADASTRO DE DISCIPLINAS
-router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => { 
-const alunos = await find_all("Alunos"); // pega os alunos do banco
+router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
 res.render("cadastro_disciplina", {
-    title: "Cadastro de disciplinas",
-    alunos // envia para o EJS
+        title: "Cadastro de disciplinas",
 });
 });
 
-router.post("/cadastro_disciplina", teacherRestrict, (req: Request, res: Response) => {
+router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
     if (!req.body) return res.sendStatus(400);
 
-    disciplinas_handler(
+    const handle = await disciplinas_handler(
         req.body.nomedisciplina,
         req.body.horario,
         req.body.tipo, // valor retornado deve ser "criar" ou "excluir"
     )
 
+    if(handle){ req.session.success_msg = "disciplina criada"}
+    else { req.session.error = "Erro na função handler "}
+
+    res.render("cadastro_disciplina", {title: "Cadastro de disciplinas",})
 })
 
 // VISUALIZACAO DISCIPLINAS
