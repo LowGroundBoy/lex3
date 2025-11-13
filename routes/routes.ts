@@ -140,6 +140,14 @@ router.get("/materiais", restrict, async (req: Request, res: Response) => {
     res.render("materiais", { title: "Materiais de disciplina" }) // TODO: criar pagina de materiais
 })
 
+// VIDEO PLAYER
+router.post("/video_player", restrict, async (req: Request, res: Response) => {
+
+    const videoselecionado = req.body.videoselecionado 
+
+    res.render("video_player", { title: "Video player", video: videoselecionado })
+})
+
 // UPLOAD MATERIAIS
 router.get("/upload", teacherRestrict, async (req: Request, res: Response) => {
   const disciplinas = await find_all("Disciplinas")
