@@ -97,7 +97,7 @@ router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: R
     res.render("cadastro_disciplina", {title: "Cadastro de disciplinas",})
 })
 
-// EDICAO DISCIPLINAS
+// EDICAO DISCIPLINAS // TODO: EDITAR PROFESSOR RESPONSAVEL PELA DISCIPLINA 
 router.get("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
     const disciplinaSelecionada = null
     const alunosTurma = null
@@ -127,8 +127,15 @@ router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) =
 
 // VISUALIZACAO MINHAS DISCIPLINAS
 router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
+
     const alunoatual = req.session.user
-    const minhas_disciplinas = await Aluno.findById(alunoatual).populate("cadeirasMatriculadas").exec();
+    const alunoDoc = await Aluno.findById(alunoatual).populate("cadeirasMatriculadas").exec();
+    console.log(alunoDoc)
+
+    if (!alunoDoc) {throw Error("Aluno não encontrado")}
+   
+    const minhas_disciplinas = alunoDoc.cadeirasMatriculadas
+    console.log(minhas_disciplinas)
 
     res.render("minhas_disciplinas", { title: "Minhas Disciplinas", minhas_disciplinas })
 })
@@ -137,7 +144,10 @@ router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) 
 // MATERIAIS VISUALIZAÇÃO
 router.get("/materiais", restrict, async (req: Request, res: Response) => {
 
-    res.render("materiais", { title: "Materiais de disciplina" }) // TODO: criar pagina de materiais
+    const todosMateriais = await find_all("Materiais")
+    console.log(todosMateriais)
+
+    res.render("materiais", { title: "Materiais de disciplina", todosMateriais }) // TODO: criar pagina de materiais
 })
 
 // VIDEO PLAYER
@@ -173,6 +183,7 @@ router.post("/upload", teacherRestrict, upload.single("file"), async (req: Reque
         disciplina: disciplina._id,
         tipo,
         filename: req.file.filename,
+        nomeOriginal: req.file.originalname,
         path: req.file.path,
     })
 
