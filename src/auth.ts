@@ -20,6 +20,7 @@ export async function authenticate(
         if (match) { 
             console.log("retornando usuario: " + matched_user.Tipo + matched_user._id!.toString())
             return callback(null, matched_user._id!.toString(), matched_user.Tipo!); } 
+        return callback(null,null,null);
     }
     else { 
         console.log("senha errada")
