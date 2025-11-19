@@ -19,7 +19,7 @@ async function count_totals(
     }
 }
 
-export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | "Todos"){ // TODO: talvez fazer um callback pra trabalhar com o sistema de notifs
+export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | "Materiais" | "Todos" ){ // TODO: talvez fazer um callback pra trabalhar com o sistema de notifs
     switch (tipo){
         case "Alunos":
             return await Aluno.find().exec()
@@ -30,6 +30,10 @@ export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | 
         case "Disciplinas":
             return await DisciplinasDB.find()
                 .populate('professorResponsavel', 'nome') // popula só o campo nome do professor
+                .exec()
+        case "Materiais":
+            return await MaterialDB.find()
+                .populate('disciplina', 'nomeOriginal') // popula só o campo nome do professor
                 .exec()
         default:
             throw new Error("Tipo não selecionado");
