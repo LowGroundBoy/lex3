@@ -4,6 +4,7 @@ import { DisciplinasDB, UserDB, MaterialDB, Aluno } from "../database/models";
 import { disciplinas_handler, find_all, editar_usuarios_disciplina } from "../database/dbfunctions";
 import multer from "multer";
 import { upload } from "../src/multerconfig";
+import { REPLCommand } from "repl";
 
 const router = Router()
 
@@ -148,6 +149,24 @@ router.get("/materiais", restrict, async (req: Request, res: Response) => {
     console.log(todosMateriais)
 
     res.render("materiais", { title: "Materiais de disciplina", todosMateriais }) // TODO: criar pagina de materiais
+})
+
+// DOWNLOAD MATERIAL
+router.get("/download", restrict, async (req: Request, res: Response) => {
+    if (!req.body) return res.sendStatus(400);
+    if (!req.body.selectedfile) return res.sendStatus(400);
+
+    const filetoget = await MaterialDB.findOne({nomeOriginal: req.body.selectedfile});
+
+    
+    if (filetoget) {
+        const f_path = filetoget.path 
+        return res.sendFile(f_path)
+    }
+    else { 
+        req.session.error = "file not found"
+        res.redirect("/materiais")
+     }
 })
 
 // VIDEO PLAYER
