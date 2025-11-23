@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    font: 13px Helvetica, Arial, sans-serif;
+    }
+
+.page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+h1 {
+    display: flex;
+    align-self: center;
+}
+
+.video_player{
+    width: auto;
+    height: auto;
+    max-height: 80vh;
+    max-width: 80vw;
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.3);;
+}

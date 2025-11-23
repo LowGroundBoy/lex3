@@ -57,7 +57,6 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
             req.session.regenerate(function(){
                 req.session.user = username 
                 req.session.accesslvl = acess!
-                req.session.success_msg = "Autenticado como " + username;
                 res.redirect("/perfil"); // volta pra pagina anterir ou /
             });
         } 
@@ -153,9 +152,19 @@ router.get("/materiais", restrict, async (req: Request, res: Response) => {
 // VIDEO PLAYER
 router.post("/video_player", restrict, async (req: Request, res: Response) => {
 
-    const videoselecionado = req.body.videoselecionado 
+    const videoselecionado = req.body.videoselecionado
+    const videodoc = await MaterialDB.findOne({ _id: videoselecionado })
+    
+    res.render("video_player", { title: "Video player", video: videodoc })
+})
 
-    res.render("video_player", { title: "Video player", video: videoselecionado })
+// PDF VIEWER
+router.post("/pdf_viewer", restrict, async (req: Request, res: Response) => {
+
+    const pdfselecionado = req.body.pdfselecionado
+    const pdfdoc = await MaterialDB.findOne({ _id: pdfselecionado })
+    
+    res.render("pdf_viewer", { title: "Visualizador de pdf", pdf: pdfselecionado })
 })
 
 // UPLOAD MATERIAIS

@@ -10,12 +10,13 @@
 
     <%- include("partials/header") %>
     <%- include("partials/message") %>
-
-    <video>
-        <source src="<%= video %>" type="video/mp4">
-        <source src="<%= video %>" type="video/mpeg">
-        <source src="<%= video %>" type="video/webm">
+<div class="page-content">
+    <% if (video) { %>
+    <h1> <%= video.nomeOriginal %> </h1>
+    <video controls class="video_player">
+        <source src="/videos/<%= video.filename %>">
     </video>
-
+    <% } %>
+</div>
 </body>
 </html>
