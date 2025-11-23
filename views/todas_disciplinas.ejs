@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= title %></title>
-    <link rel="stylesheet" href="/css/todas_disciplinas.css"> 
+    <link rel="stylesheet" href="/css/minhas_disciplinas.css">
   </head>
 
   <body>
@@ -17,7 +17,9 @@
 
     <% if(todas_disciplinas) { %> 
       <% for (let disciplina of todas_disciplinas) { %>
-        <fieldset id="fieldset">
+        <a href="/materiais"
+             class="card"
+             style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
           <p>
             <label class="info-label">
               <strong>Disciplina:</strong> <%= disciplina.nomeDisciplina %>
@@ -29,7 +31,7 @@
               <%= disciplina.professorResponsavel ? disciplina.professorResponsavel.nome : "Sem professor" %>
             </label>
           </p>
-        </fieldset> 
+        </a> 
         <br>
       <% } %>
     <% } else { %>
