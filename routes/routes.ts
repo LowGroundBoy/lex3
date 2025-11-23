@@ -157,7 +157,6 @@ router.get("/download", restrict, async (req: Request, res: Response) => {
 
     const filetoget = await MaterialDB.findOne({nomeOriginal: req.body.selectedfile});
 
-    
     if (filetoget) {
         const f_path = filetoget.path 
         return res.sendFile(f_path)
