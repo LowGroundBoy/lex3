@@ -151,15 +151,15 @@ router.get("/materiais", restrict, async (req: Request, res: Response) => {
 })
 
 // DOWNLOAD MATERIAL
-router.get("/download", restrict, async (req: Request, res: Response) => {
-    if (!req.body) return res.sendStatus(400);
-    if (!req.body.selectedfile) return res.sendStatus(400);
+router.get("/download/:file", restrict, async (req: Request, res: Response) => {
+    if (!req.params.file) return res.sendStatus(400);
 
-    const filetoget = await MaterialDB.findOne({nomeOriginal: req.body.selectedfile});
+    const selectedFile = req.params.file
+    const filetoget = await MaterialDB.findOne({filename: selectedFile});
 
     if (filetoget) {
         const f_path = filetoget.path 
-        return res.sendFile(f_path)
+        return res.download(f_path)
     }
     else { 
         req.session.error = "file not found"
@@ -182,7 +182,7 @@ router.post("/pdf_viewer", restrict, async (req: Request, res: Response) => {
     const pdfselecionado = req.body.pdfselecionado
     const pdfdoc = await MaterialDB.findOne({ _id: pdfselecionado })
     
-    res.render("pdf_viewer", { title: "Visualizador de pdf", pdf: pdfselecionado })
+    res.render("pdf_viewer", { title: "Visualizador de pdf", pdf: pdfdoc })
 })
 
 // UPLOAD MATERIAIS

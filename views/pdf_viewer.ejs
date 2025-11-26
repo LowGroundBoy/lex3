@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/media_pages.css">
+    <title><%= title %></title>
+</head>
+<body>
+
+    <%- include("partials/header") %>
+    <%- include("partials/message") %>
+
+<div class="page-content">
+    <% if (pdf) { %>
+    <h1> <%= pdf.nomeOriginal %> </h1>
+    <embed src="/pdfs/<%= pdf.filename %>" class="pdf_viewer" type="application/pdf">
+    <a href="/download/<%= pdf.filename %>"> Clique aqui para baixar o material! </a>
+    <% } %>
+</div>
+
+</body>
+</html>
