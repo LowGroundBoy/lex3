@@ -79,7 +79,9 @@ router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO
 
 // CADASTRO DE DISCIPLINAS
 router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
-res.render("cadastro_disciplina", { title: "Cadastro de disciplinas" });
+    const professoreslist = await find_all("Professores")
+
+    res.render("cadastro_disciplina", { title: "Cadastro de disciplinas", professores: professoreslist});
 });
 
 router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
@@ -88,16 +90,17 @@ router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: R
     const handle = await disciplinas_handler(
         req.body.nomedisciplina,
         req.body.horario,
-        req.body.tipo, // valor retornado deve ser "criar" ou "excluir"
+        req.body.professorSelecionado,
+        req.body.tipo, // valor enviado deve ser "criar" ou "excluir"
     )
 
     if(handle){ req.session.success_msg = "disciplina criada"}
     else { req.session.error = "Erro na função handler "}
 
-    res.render("cadastro_disciplina", {title: "Cadastro de disciplinas",})
+    res.redirect("/cadastro_disciplina")
 })
 
-// EDICAO DISCIPLINAS // TODO: EDITAR PROFESSOR RESPONSAVEL PELA DISCIPLINA 
+// EDICAO DISCIPLINAS // TODO: EDITAR PROFESSOR RESPONSAVEL PELA DISCIPLINA TODO: FAZER ESSA ROTA FAZER ALGO
 router.get("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
     const disciplinaSelecionada = null
     const alunosTurma = null
@@ -127,7 +130,7 @@ router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) =
 
 // VISUALIZACAO MINHAS DISCIPLINAS
 router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
-
+    // FIXME: SE PROFESSOR TENTAR ENTRAR DÁ PROBLEMA...
     const alunoatual = req.session.user
     const alunoDoc = await Aluno.findById(alunoatual).populate("cadeirasMatriculadas").exec();
     console.log(alunoDoc)
@@ -140,6 +143,18 @@ router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) 
     res.render("minhas_disciplinas", { title: "Minhas Disciplinas", minhas_disciplinas })
 })
 
+// VISUALIZAR DISCIPLINA
+router.get("/disciplina/:disciplina_id", restrict, async (req: Request, res: Response) => {
+    if (!req.params.disciplina_id) return res.sendStatus(400);
+
+    // TODO: LIMITAR SÓ PRA ALUNOS DA TURMA VISUALIZAREM // talvez um query no db simples pra ver se o logado bate
+
+    const disciplina = await DisciplinasDB.findOne({_id: req.params.disciplina_id});
+    const chatid = disciplina!.chatDisciplina;
+    const materiais = await MaterialDB.findOne({ disciplina: req.params.disciplina_id })
+
+    res.render("visualizar_disciplina", {title: "Visualizar Disciplina", disciplina , chatid, materiais})
+})
 
 // MATERIAIS VISUALIZAÇÃO
 router.get("/materiais", restrict, async (req: Request, res: Response) => {
@@ -147,7 +162,7 @@ router.get("/materiais", restrict, async (req: Request, res: Response) => {
     const todosMateriais = await find_all("Materiais")
     console.log(todosMateriais)
 
-    res.render("materiais", { title: "Materiais de disciplina", todosMateriais }) // TODO: criar pagina de materiais
+    res.render("materiais", { title: "Materiais de disciplina", todosMateriais })
 })
 
 // DOWNLOAD MATERIAL
@@ -216,6 +231,16 @@ router.post("/upload", teacherRestrict, upload.single("file"), async (req: Reque
 
     req.session.success_msg = "Upload concluído"
     res.redirect("/upload");
+})
+
+// CHAT DISCIPLINAS
+router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) => {
+    if (!req.params.chat_id) return res.sendStatus(400);
+
+    // TODO: atualizacao constante
+    const chat = req.params.chat_id
+
+    res.render("chatroom", { title: "Chat da disciplina", })
 })
 
 export default router;

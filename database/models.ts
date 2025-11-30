@@ -2,6 +2,7 @@ import mongoose, { Document, SchemaTypes, Types } from 'mongoose'
 const { Schema } = mongoose;
 
 // FIXME: SEPARAR SCHEMAS EM ARQUIVOS DIFERENTES
+// FIXME: COLOCAR REQUIRED NOS CAMPOS DOS SCHEMAS
 // typescript, precisa das checagens de tipo, então tem que extender a classe padrão "Document"
 interface IUser extends Document {
     username: string;
@@ -15,11 +16,12 @@ interface IUser extends Document {
 }
 
 interface IDisciplina extends Document {
-    nomeDisciplina: string;
-    horario: string;
-    qtdAlunos: Number;
-    alunosCadastrados: Types.ObjectId[];
-    professorResponsavel: Types.ObjectId;
+    nomeDisciplina: string,
+    horario: string,
+    qtdAlunos: Number,
+    alunosCadastrados: Types.ObjectId[],
+    professorResponsavel: Types.ObjectId,
+    chatDisciplina: Types.ObjectId | null,
 }
 
 interface IMaterial extends Document{
@@ -28,7 +30,7 @@ interface IMaterial extends Document{
     filename: string,
     nomeOriginal: string,
     path: string,
-    uploadDate: Date;
+    uploadDate: Date,
 }
 
 // USERS
@@ -65,16 +67,17 @@ userSchema.methods.get_profile = function(this: IUser) {
 
 // DISCIPLINAS
 const disciplinaSchema = new Schema<IDisciplina>({
-    nomeDisciplina: {type: String, unique: true},
-    horario: {type: String},
+    nomeDisciplina: {type: String, unique: true, required: true},
+    horario: {type: String, required: true},
     qtdAlunos: {type: Number},
     alunosCadastrados: [{type: Schema.Types.ObjectId, ref: "Aluno", default: []}], // array de object IDS unicos
-    professorResponsavel: {type: Schema.Types.ObjectId, unique: true, default: null},
+    professorResponsavel: {type: Schema.Types.ObjectId, unique: true},
+    chatDisciplina: {type: Schema.Types.ObjectId, ref: "Chat", default: null},
 })
 
 // MATERIAIS
 const materialSchema = new Schema<IMaterial>({
-    disciplina: [{ type: Schema.Types.ObjectId, ref: "Disciplina" , default: []}],
+    disciplina: { type: Schema.Types.ObjectId, ref: "Disciplina" , default: []},
     tipo: String,
     filename: String,
     nomeOriginal: String,
@@ -94,7 +97,7 @@ export const Professor = UserDB.discriminator<IUser>("Professor", new Schema({
 // ALUNO HERDA USERS
 export const Aluno = UserDB.discriminator<IUser>("Aluno", new Schema({
     semestre: Number,
-    cadeirasMatriculadas: [{ type: Schema.Types.ObjectId, ref: "Disciplina", default: [] }],
+    cadeirasMatriculadas: [{ type: Schema.Types.ObjectId, ref: "Disciplina", default: [] }], // FIXME: ATUALIZAR CADEIRAS DO ALUNO
 }));
 
 

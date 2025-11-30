@@ -29,7 +29,12 @@
               <%= disciplina.professorResponsavel ? disciplina.professorResponsavel.nome : "Sem professor" %>
             </label>
           </p>
+          <p>            
+          <label class="info-label">
+              <a href="/disciplina/<%= disciplina._id %>"> Visualizar disciplina </a> 
+            </label></p>
         </fieldset> 
+
         <br>
       <% } %>
     <% } else { %>

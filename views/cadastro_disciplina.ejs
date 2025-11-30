@@ -35,6 +35,15 @@
               <option value="excluir">Excluir</option>
             </select>
           </p>
+          
+          <p>
+          <label for="professorSelecionado">Professor Responsável:</label><br>
+          <select name="professorSelecionado" required>
+            <% professores.forEach(p => { %>
+              <option value="<%= p._id %>"><%= p.nomeDisciplina %> (<%= p._id %>)</option>
+            <% }) %>
+          </select>
+          </p>
 
           <p>
             <input type="submit" value="Cadastrar Disciplina" class="button">

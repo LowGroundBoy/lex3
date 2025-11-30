@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+
+    <h1><%= disciplina.nomeDisciplina %></h1>
+
+    <p><strong>Horário:</strong> <%= disciplina.horario %></p>
+    <p><strong>Quantidade de alunos:</strong> <%= disciplina.qtdAlunos %></p>
+
+    <h2>Materiais</h2>
+
+    <% if (materiais) { %>
+        <ul>
+            <li>
+                <strong>Tipo:</strong> <%= materiais.tipo %><br>
+                <strong>Arquivo:</strong> <%= materiais.filename %><br>
+                <a href="<%= materiais.path %>">Baixar</a>
+            </li>
+        </ul>
+    <% } else { %>
+        <p>Nenhum material disponível.</p>
+    <% } %>
+
+    <h1><%= chatid %></h1>
+    <h2>Chat</h2>
+    <a href="/chatroom/<%= chatid %>">Entrar no chat</a>
+
+</body>
+</html>

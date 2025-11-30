@@ -1,4 +1,5 @@
 import { UserDB, Aluno, Professor, DisciplinasDB, MaterialDB } from "./models"
+import { chatDB } from "./conversationschemas"
 import { Types } from "mongoose"
 
 // funcoes internas
@@ -43,17 +44,35 @@ export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | 
 export async function disciplinas_handler(
     nomeDisciplina: String | undefined,
     horario: String | undefined,
+    professorSelecionado: String | undefined,
     tipo: "criar" | "excluir") // TODO: fazer um callback aqui
     {
     switch (tipo){
         case "criar":
-            DisciplinasDB.create({
+            const novadisciplina = await DisciplinasDB.create({
                 nomeDisciplina: nomeDisciplina,
                 horario: horario,   
                 qtdAlunos: 0,
-                // professor e matriculados é nenhum por default
+                professorResponsavel: professorSelecionado,
+                chatDisciplina: null,
+                // matriculados é nenhum por default
             })
-            return true
+            
+            if (!novadisciplina) throw new Error("Erro na criação de disciplina");
+
+            const novochat = await chatDB.create({
+                disciplina: novadisciplina._id
+            });
+
+            if (!novochat) throw new Error("Erro na criação de chat");
+
+            await DisciplinasDB.updateOne(
+                { _id: novadisciplina._id },
+                { chatDisciplina: novochat._id }
+            );
+
+            return true;
+
         case "excluir":
             await DisciplinasDB.findByIdAndDelete("nomeDisciplina");
             return true
