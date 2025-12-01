@@ -8,16 +8,12 @@ interface IMatricula extends Document {
 };
 
 const matriculasInterface = new Schema<IMatricula>({
-    aluno: {type: Schema.Types.ObjectId, required: true},
+    aluno: {type: Schema.Types.ObjectId, ref:"User", required: true},
     disciplina: {type: Schema.Types.ObjectId, required: true},
-    nota: Number,
+    nota: {type: Number, default: null},
 });
+
+matriculasInterface.index({ aluno: 1, disciplina: 1 }, { unique: true });
 
 export const MatriculasDB = mongoose.model<IMatricula>("Matricula", matriculasInterface);
 
-// maybe some methods here...
-
-//  exemplo de uso
-
-// // get aluno with all grades
-// const result = await Matricula.find({ aluno: alunoId }).populate("disciplina");

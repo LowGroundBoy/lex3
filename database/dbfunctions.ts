@@ -1,10 +1,9 @@
-import { DisciplinasDB, MaterialDB } from "./disciplinas_mat_schemas"
+import { DisciplinasDB } from "./disciplinas_schemas"
+import { MaterialDB } from "./materiais_schemas"
 import { UserDB, Aluno, Professor } from "./user_schemas"
 import { chatDB } from "./conversationschemas"
 import { Types } from "mongoose"
-
-// funcoes internas
-function job_queue(){} // TODO: ver se vale a pena implementar isso
+import { MatriculasDB } from "./matriculas_schemas"
 
 async function count_totals(
     tipo: "Alunos" | "Professores" | "Disciplinas"
@@ -17,12 +16,12 @@ async function count_totals(
         case "Disciplinas":
             return await DisciplinasDB.countDocuments()
         default:
-            throw new Error("Tip1o não selecionado");
+            throw new Error("Tipo não selecionado");
     }
 }
 
-export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | "Materiais" | "Todos" ){ // TODO: talvez fazer um callback pra trabalhar com o sistema de notifs
-    switch (tipo){
+export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | "Materiais" | "Todos" ){ 
+    switch (tipo){ 
         case "Alunos":
             return await Aluno.find().exec()
         case "Professores":
@@ -35,21 +34,19 @@ export async function find_all(tipo: "Alunos" | "Professores" | "Disciplinas" | 
                 .exec()
         case "Materiais":
             return await MaterialDB.find()
-                .populate('disciplina', 'nomeOriginal') // popula só o campo nome do professor
+                .populate('disciplina', 'nomeOriginal') 
                 .exec()
         default:
             throw new Error("Tipo não selecionado");
     }
 }
 
-export async function disciplinas_handler(
+export async function create_disciplina(
     nomeDisciplina: String | undefined,
     horario: String | undefined,
     professorSelecionado: String | undefined,
-    tipo: "criar" | "excluir") // TODO: fazer um callback aqui
+    callback: (err: Error | null, success: string | null) => void) 
     {
-    switch (tipo){
-        case "criar":
             const novadisciplina = await DisciplinasDB.create({
                 nomeDisciplina: nomeDisciplina,
                 horario: horario,   
@@ -58,29 +55,58 @@ export async function disciplinas_handler(
                 chatDisciplina: null,
             })
             
-            if (!novadisciplina) throw new Error("Erro na criação de disciplina");
+            if (!novadisciplina) return callback(Error("Erro na criação de disciplina"), null);
 
             const novochat = await chatDB.create({
                 disciplina: novadisciplina._id
             });
 
-            if (!novochat) throw new Error("Erro na criação de chat");
+            if (!novochat) return callback(Error("Erro na criação de chat"), null);
 
             await DisciplinasDB.updateOne(
                 { _id: novadisciplina._id },
                 { chatDisciplina: novochat._id }
             );
 
-            return true;
-
-        case "excluir":
-            await DisciplinasDB.findByIdAndDelete("nomeDisciplina");
-            return true
-        default:
-            throw new Error("Tipo não selecionado");
+            return callback(null, "Disciplinas e chats criados com sucesso.");
     }
-}
 
-export async function editar_usuarios_disciplina(){
-    // FIXME: REFAZER ISSO COM O NOVO SCHEMA
+export async function editar_usuarios_disciplina(
+    usuario: Types.ObjectId,
+    disciplina: Types.ObjectId,
+    tipo: "Adicionar" | "Excluir",
+    callback: (err: Error | null, success: Boolean) => void
+)
+{
+    try{
+        switch (tipo){
+            case "Adicionar":
+                try {
+                    const matricular_user = await MatriculasDB.create({
+                    aluno: usuario,
+                    disciplina: disciplina
+                })
+                if(!matricular_user){ return callback(new Error("Falha ao adicionar"), false); }
+
+                return callback(null, true);
+                } catch (e: any){
+                    if (e.code === 11000) {
+                    return callback(new Error("Usuário já matriculado"), false);
+                    }
+                    return callback(e, false);
+                }
+    
+
+            case "Excluir":
+                const delete_user = await MatriculasDB.findOneAndDelete({aluno: usuario})
+                if (!delete_user) {return callback(new Error("Falha ao adicionar"), false); }
+
+                return callback(null, true);
+            default:
+                return callback(Error("Tipo não selecionado"), false)
+        }
+    } catch (e: any){
+        return callback(e, false);
+    }
+     
 }

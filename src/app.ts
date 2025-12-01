@@ -11,15 +11,13 @@ const port = 3001; // mudavel
 app.set("view engine", "ejs"); // pra renderizar templates
 app.set("views", path.join(__dirname, "../views")); // volta na pasta raiz e puxa da pasta views
 
-// TODO: middleware tirado do exemplo no github do proprio express, temporario possivelmente, nem olhei como funciona
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
   resave: false, // nao salva sessao se nada mudar
   saveUninitialized: false, // nao cria sessao até salvar algo
-  secret: '323251531' // TEMPORARIO !!!!!!!!!!!!!!!!!!!!
+  secret: '323251531' // FIXME: TEMPORARIO !!!!!!!!!!!!!!!!!!!!
 }));
 
-// TODO: mensagens de erro tiradas do exemplo tbm
 app.use(function(req, res, next){
   var err = req.session.error;
   var msg = req.session.success_msg;

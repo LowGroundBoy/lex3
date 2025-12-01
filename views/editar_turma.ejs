@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar turma</title>
+    <link rel="stylesheet" href="/css/editar_turma.css">
+</head>
+<body>
+
+    <!--  disciplina_selecionada (nome, horario), matriculas (aluno (populado com nome, etc), disciplina) -->
+    <%- include("partials/header") %>
+    <%- include("partials/message") %>
+
+    <% if (disciplina_selecionada && matriculas) { %>
+
+    <table class="tabela-alunos">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Semestre</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% for (let m of matriculas) { %>
+                <tr>
+                    <td><%= m.aluno.nome %></td>
+                    <td><%= m.aluno.semestre %></td>
+                    <td><button class="editar-button">Editar notas</button></td>
+                    <td><button class="danger-button">Remover matrícula</button></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <a href="/matricular_alunos">Fazer novas matrículas</a>
+
+    <% } %>
+
+</body>
+</html>

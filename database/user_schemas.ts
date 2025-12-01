@@ -1,6 +1,7 @@
 import mongoose, { Document, SchemaTypes, Types } from 'mongoose'
 const { Schema } = mongoose;
 
+// FIXME: COLOCAR REQUIRED NOS CAMPOS DOS SCHEMAS
 // typescript, precisa das checagens de tipo, então tem que extender a classe padrão "Document"
 interface IUser extends Document {
     username: string;

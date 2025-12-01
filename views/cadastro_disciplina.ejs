@@ -27,20 +27,12 @@
             <input type="text" name="horario" id="horario" class="inputbox" required>
           </p>
 
-          <p>
-            <label for="tipo">Tipo:</label><br>
-            <select name="tipo" id="tipo" class="inputbox" required>
-              <option value="">-- Selecione o tipo --</option>
-              <option value="criar">Criar</option>
-              <option value="excluir">Excluir</option>
-            </select>
-          </p>
           
           <p>
           <label for="professorSelecionado">Professor Responsável:</label><br>
           <select name="professorSelecionado" required>
             <% professores.forEach(p => { %>
-              <option value="<%= p._id %>"><%= p.nomeDisciplina %> (<%= p._id %>)</option>
+              <option value="<%= p._id %>"><%= p.nomeDisciplina %> (<%= p.nome %>)</option>
             <% }) %>
           </select>
           </p>

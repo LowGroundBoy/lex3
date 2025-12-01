@@ -2,7 +2,7 @@
 
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://admin:123@localhost:27018/admin")
+client = MongoClient("mongodb://localhost:27017")
 
 db = client["test"]
 
