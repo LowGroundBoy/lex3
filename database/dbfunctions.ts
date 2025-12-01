@@ -1,4 +1,5 @@
-import { UserDB, Aluno, Professor, DisciplinasDB, MaterialDB } from "./models"
+import { DisciplinasDB, MaterialDB } from "./disciplinas_mat_schemas"
+import { UserDB, Aluno, Professor } from "./user_schemas"
 import { chatDB } from "./conversationschemas"
 import { Types } from "mongoose"
 
@@ -55,7 +56,6 @@ export async function disciplinas_handler(
                 qtdAlunos: 0,
                 professorResponsavel: professorSelecionado,
                 chatDisciplina: null,
-                // matriculados é nenhum por default
             })
             
             if (!novadisciplina) throw new Error("Erro na criação de disciplina");
@@ -81,28 +81,6 @@ export async function disciplinas_handler(
     }
 }
 
-export async function editar_usuarios_disciplina(
-    disciplinaIn: string,
-    alunoIn: string,
-    tipo: "matricular" | "remover")
-    {
-    const disciplina = await DisciplinasDB.findOne({nomeDisciplina: disciplinaIn});
-    const aluno = await Aluno.findOne({nome: alunoIn});
-
-    switch (tipo){
-        case "matricular":   
-            if (disciplina && aluno) { 
-                disciplina.alunosCadastrados.push(aluno._id as Types.ObjectId) // FIXME: ISSO AQUI VAI DAR MERDA
-                aluno.cadeirasMatriculadas!.push(disciplina._id as Types.ObjectId)
-            } 
-            else{ return } // TODO: escrever retorno
-
-        case "remover":
-            if (disciplina && aluno) {
-                disciplina.alunosCadastrados = disciplina.alunosCadastrados.filter(
-                id => !id.equals(aluno._id as Types.ObjectId));
-            }
-        default:
-            throw new Error("Tipo não selecionado");
-    }
+export async function editar_usuarios_disciplina(){
+    // FIXME: REFAZER ISSO COM O NOVO SCHEMA
 }

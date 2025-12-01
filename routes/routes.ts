@@ -1,6 +1,8 @@
 import { Router, NextFunction, Request, Response } from "express";
 import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth"
-import { DisciplinasDB, UserDB, MaterialDB, Aluno } from "../database/models";
+import { DisciplinasDB, MaterialDB } from "../database/disciplinas_mat_schemas";
+import { UserDB, Aluno, Professor} from "../database/user_schemas"
+import { MatriculasDB} from "../database/matriculas_schemas"
 import { disciplinas_handler, find_all, editar_usuarios_disciplina } from "../database/dbfunctions";
 import multer from "multer";
 import { upload } from "../src/multerconfig";
@@ -100,23 +102,20 @@ router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: R
     res.redirect("/cadastro_disciplina")
 })
 
-// EDICAO DISCIPLINAS // TODO: EDITAR PROFESSOR RESPONSAVEL PELA DISCIPLINA TODO: FAZER ESSA ROTA FAZER ALGO
-router.get("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
-    const disciplinaSelecionada = null
-    const alunosTurma = null
+// EDICAO DISCIPLINAS, CONTROLE DE TURMA // TODO: EDITAR PROFESSOR RESPONSAVEL PELA DISCIPLINA TODO: FAZER ESSA ROTA FAZER ALGO
+router.get("/editar_turma/:disciplina", teacherRestrict, async (req: Request, res: Response) => {
+    if (!req.params.disciplina) return res.sendStatus(400);
 
-    const disciplinas = await find_all("Disciplinas")
+    const disciplina_selecionada = await DisciplinasDB.findById(req.params.disciplina);
+    const matriculas = await MatriculasDB.find({ disciplina: disciplina_selecionada}).populate("aluno");
 
-    res.render("editar_turma", { title: "Editar turmas", disciplinaSelecionada, alunosTurma, disciplinas })
+    res.render("editar_turma", { title: "Editar turmas", matriculas, disciplina_selecionada })
 })
 
+// ADICIONAR/REMOVER ALUNOS DE DISCIPLINAS
 router.post("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
 
-    editar_usuarios_disciplina(
-        req.body.selecaoDisciplina,
-        req.body.selecaoAluno,
-        req.body.tipo
-    )
+    editar_usuarios_disciplina( asadasdasdas ) // FIXME: ADEQUAR AO NOVO SCHEMA
 
     res.redirect("/editar_turma")
 })
@@ -132,15 +131,12 @@ router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) =
 router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
     // FIXME: SE PROFESSOR TENTAR ENTRAR DÁ PROBLEMA...
     const alunoatual = req.session.user
-    const alunoDoc = await Aluno.findById(alunoatual).populate("cadeirasMatriculadas").exec();
-    console.log(alunoDoc)
+    const alunoDoc = await MatriculasDB.find({ aluno: alunoatual }).populate("disciplina")
+    console.log(alunoDoc) // FIXME: REMOVER TODOS CONSOLE LOGS
 
     if (!alunoDoc) {throw Error("Aluno não encontrado")}
-   
-    const minhas_disciplinas = alunoDoc.cadeirasMatriculadas
-    console.log(minhas_disciplinas)
 
-    res.render("minhas_disciplinas", { title: "Minhas Disciplinas", minhas_disciplinas })
+    res.render("minhas_disciplinas", { title: "Minhas Disciplinas",  alunoDoc})
 })
 
 // VISUALIZAR DISCIPLINA
