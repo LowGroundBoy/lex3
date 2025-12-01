@@ -22,6 +22,7 @@
         border-radius: 10px;
         box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
         padding: 20px;
+        transition: 0.5s;
       }
       .card::after {
         content: "";
@@ -32,6 +33,13 @@
         width: 6px;  /* espessura da linha */
         border-radius: 10px;
         background-color: var(--cor-linha); /* cor dinâmica */
+      }
+      .card:hover{
+        background-color: rgb(181, 218, 239);
+        cursor: pointer;
+        box-shadow:
+          inset 0 0 25px rgba(255, 255, 255, 0.7), 
+          0 0 12px rgba(255, 255, 255, 0.6);    
       }
       .inputbox{
         font-size: 130%;

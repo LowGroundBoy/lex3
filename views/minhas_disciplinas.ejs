@@ -17,7 +17,9 @@
 
     <% if(minhas_disciplinas) { %> 
       <% for (let disciplina of minhas_disciplinas) { %>
-        <fieldset id="fieldset">
+        <a href="/disciplina/<%= disciplina._id %>"
+          class="card"
+          style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
           <p>
             <label class="info-label">
               <strong>Disciplina:</strong> <%= disciplina.nomeDisciplina %>
@@ -26,14 +28,10 @@
           <p>
             <label class="info-label">
               <strong>Professor:</strong> 
-              <%= disciplina.professorResponsavel ? disciplina.professorResponsavel.nome : "Sem professor" %>
+              <%= disciplina.professorResponsavel  %>
             </label>
-          </p>
-          <p>            
-          <label class="info-label">
-              <a href="/disciplina/<%= disciplina._id %>"> Visualizar disciplina </a> 
-            </label></p>
-        </fieldset> 
+          </p>           
+        </a> 
 
         <br>
       <% } %>

@@ -17,7 +17,7 @@
 
     <% if(todas_disciplinas) { %> 
       <% for (let disciplina of todas_disciplinas) { %>
-        <a href="/materiais"
+        <a href="/disciplina/<%= disciplina._id %>"
              class="card"
              style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
           <p>
@@ -28,7 +28,7 @@
           <p>
             <label class="info-label">
               <strong>Professor:</strong> 
-              <%= disciplina.professorResponsavel ? disciplina.professorResponsavel.nome : "Sem professor" %>
+              <%= disciplina.professorResponsavel %>
             </label>
           </p>
         </a> 
