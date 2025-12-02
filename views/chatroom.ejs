@@ -3,12 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #chat-window {
+            width: 100%;
+            max-width: 600px;
+            height: 75vh;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        #chat-window > div {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        #chat-window > div > div {
+            background: #e8e8e8;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            width: fit-content;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        #chat-window > div > div.you {
+            background: #d1ffd1;
+            margin-left: auto;
+        }
+
+        #message-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        #message-input:focus {
+            border-color: #00aaff;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 12px;
+            border: none;
+            background: #398eb9;
+            color: white;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .5s;
+        }
+
+        button:hover {
+            background: #21688c;
+        }
+
+    </style>
     <title>Document</title>
 </head>
 <body>
     <%- include("partials/header") %>
     <%- include("partials/message") %>
 
-    <h1>teste page</h1>
+    <div id="chat-window">
+        <% messages.forEach(msg => { %>
+            <div>
+                <%= msg.sender ? msg.sender.name : "Unknown" %>: <%= msg.content %>
+            </div>
+        <% }) %>
+        <input id="message-input" type="text" placeholder="Digite sua mensagem.">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chatroom.js"></script>
+    <script>
+        window.chatId = "<%= chat_id %>";
+        window.userid = "<%= currentuser._id %>";
+        initChat(window.chatId, window.userId);
+    </script>
 </body>
 </html>

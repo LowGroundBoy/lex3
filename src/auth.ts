@@ -1,6 +1,6 @@
 import session from "express-session";
 import express, { NextFunction, Request, Response } from "express";
-import { Aluno, Professor, UserDB } from "../database/models";
+import { Aluno, Professor, UserDB } from "../database/user_schemas";
 import { Document } from "mongoose";
 import bcrypt from "bcrypt"
 
@@ -27,7 +27,7 @@ export async function authenticate(
         return callback(null, null, null); }
 }
 
-// RESTRINGIR PAGINAS TODO: EXPANDIR RESTRIÇÃO A TIPOS DE USUÁRIOS ALUNO/PROFESSOR
+
 export function restrict(req: Request, res: Response, next: NextFunction){
     if (req.session.user) {
         next(); // se o usuário está autenticado, continua
@@ -57,7 +57,7 @@ export async function create_user(
     callback: (code: number, msg: string | null) => void)
 {
     const checkexist = await UserDB.findOne({username: username});
-    if (checkexist) return callback(0, "Username em uso.") // TODO: ver como Error funciona
+    if (checkexist) return callback(0, "Username em uso.")
 
     switch (type){
         case "Aluno": 

@@ -1,10 +1,12 @@
 import { Router, NextFunction, Request, Response } from "express";
-import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth"
-import { DisciplinasDB, UserDB, MaterialDB, Aluno } from "../database/models";
-import { disciplinas_handler, find_all, editar_usuarios_disciplina } from "../database/dbfunctions";
-import multer from "multer";
+import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth";
+import { DisciplinasDB } from "../database/disciplinas_schemas";
+import { MaterialDB } from "../database/materiais_schemas";
+import { UserDB, Aluno, Professor} from "../database/user_schemas";
+import { MatriculasDB} from "../database/matriculas_schemas";
+import { create_disciplina, find_all, editar_usuarios_disciplina } from "../database/dbfunctions";
 import { upload } from "../src/multerconfig";
-import { REPLCommand } from "repl";
+import { chatDB } from "../database/conversationschemas";
 
 const router = Router()
 
@@ -62,14 +64,14 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
             });
         } 
         else {
-            req.session.error = "Autenticação falhou, verifique o usuário e senha" // TODO: talvez fazer uma função pra anunciar isso na tela (front?)
+            req.session.error = "Autenticação falhou, verifique o usuário e senha"
             res.redirect('/login')
         };
     });
 });
 
 // PERFIL
-router.get("/perfil", restrict, async (req: Request, res: Response) => { // TODO: FAZER O PERFIL PUXAR DOS DADOS DO USUARIO LOGADO
+router.get("/perfil", restrict, async (req: Request, res: Response) => { 
     const userdoc = await UserDB.findById(req.session.user);
     console.log(req.session.user)
     const profiledata = userdoc?.get_profile();
@@ -84,41 +86,75 @@ router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Re
     res.render("cadastro_disciplina", { title: "Cadastro de disciplinas", professores: professoreslist});
 });
 
-router.post("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
+router.post("/cadastro_disciplina", teacherRestrict, async (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
-    const handle = await disciplinas_handler(
-        req.body.nomedisciplina,
-        req.body.horario,
-        req.body.professorSelecionado,
-        req.body.tipo, // valor enviado deve ser "criar" ou "excluir"
-    )
+    try {
+        create_disciplina(
+            req.body.nomedisciplina,
+            req.body.horario,
+            req.body.professorSelecionado,
+            (err, success) => {
+                if (err) req.session.error = String(err);
+                if (success) req.session.success_msg = success;
 
-    if(handle){ req.session.success_msg = "disciplina criada"}
-    else { req.session.error = "Erro na função handler "}
+                return res.redirect("/cadastro_disciplina");
+            }
+        );
+    } catch (e: any) {
+        req.session.error = e.message;
+        return res.redirect("/cadastro_disciplina");
+    }
+});
 
-    res.redirect("/cadastro_disciplina")
+// VISUALIZACAO DE TURMAS DO PROFESSOR
+router.get("/minhas_turmas", teacherRestrict, async (req: Request, res: Response) => {
+
+    const prof = await Professor.findById(req.session.user)
+    if (!prof) { req.session.error = "Não foi possível encontrar o professor"; res.redirect("/perfil"); return; }
+
+    const disciplinas = await DisciplinasDB.find({ professorResponsavel: prof._id })
+
+    res.render("minhas_turmas", { title: "Minhas turmas", disciplinas } )
 })
 
-// EDICAO DISCIPLINAS // TODO: EDITAR PROFESSOR RESPONSAVEL PELA DISCIPLINA TODO: FAZER ESSA ROTA FAZER ALGO
-router.get("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
-    const disciplinaSelecionada = null
-    const alunosTurma = null
+// EDICAO DISCIPLINAS, CONTROLE DE TURMA TODO: FAZER ESSA ROTA FAZER ALGO
+router.get("/editar_turma/:disciplina", teacherRestrict, async (req: Request, res: Response) => {
+    if (!req.params.disciplina) return res.sendStatus(400);
 
+    const disciplina_selecionada = await DisciplinasDB.findById(req.params.disciplina);
+    const matriculas = await MatriculasDB.find({ disciplina: disciplina_selecionada}).populate("aluno");
+    console.log(matriculas)
+
+    res.render("editar_turma", { title: "Editar turmas", matriculas, disciplina_selecionada })
+})
+
+// ADICIONAR ALUNOS A DISCIPLINAS
+router.get("/matricular_alunos", teacherRestrict, async (req: Request, res: Response) => {
+
+    const alunos = await find_all("Alunos")
+    alunos.forEach(e => {console.log(e)})
     const disciplinas = await find_all("Disciplinas")
 
-    res.render("editar_turma", { title: "Editar turmas", disciplinaSelecionada, alunosTurma, disciplinas })
+    res.render("matricular_alunos", { title: "Matricular alunos", alunos, disciplinas})
 })
+// TODO: EXCLUSAO DE ALUNOS DA DISC
+router.post("/matricular_alunos", teacherRestrict, async (req: Request, res: Response) => {
+    try{
+        editar_usuarios_disciplina( 
+        req.body.aluno_selecionado,
+        req.body.disciplina_selecionada,
+        "Adicionar",
+        function(err, success){
+            if (err) { req.session.error = String(err); }
+            if (success) { req.session.success_msg = "Edição completa"; }
 
-router.post("/editar_turma", teacherRestrict, async (req: Request, res: Response) => {
-
-    editar_usuarios_disciplina(
-        req.body.selecaoDisciplina,
-        req.body.selecaoAluno,
-        req.body.tipo
-    )
-
-    res.redirect("/editar_turma")
+            return res.redirect("/matricular_alunos");
+        }) 
+    } catch (e: any) {
+        req.session.error = e.message;
+        return res.redirect("/matricular_alunos");
+    }
 })
 
 // VISUALIZACAO TODAS DISCIPLINAS
@@ -130,20 +166,17 @@ router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) =
 
 // VISUALIZACAO MINHAS DISCIPLINAS
 router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
-    // FIXME: SE PROFESSOR TENTAR ENTRAR DÁ PROBLEMA...
+    if (req.session.accesslvl === "Professor") { res.redirect("/minhas_turmas") }
     const alunoatual = req.session.user
-    const alunoDoc = await Aluno.findById(alunoatual).populate("cadeirasMatriculadas").exec();
-    console.log(alunoDoc)
+    const alunoDoc = await MatriculasDB.find({ aluno: alunoatual }).populate("disciplina")
+    console.log(alunoDoc) // FIXME: REMOVER TODOS CONSOLE LOGS
 
     if (!alunoDoc) {throw Error("Aluno não encontrado")}
-   
-    const minhas_disciplinas = alunoDoc.cadeirasMatriculadas
-    console.log(minhas_disciplinas)
 
-    res.render("minhas_disciplinas", { title: "Minhas Disciplinas", minhas_disciplinas })
+    res.render("minhas_disciplinas", { title: "Minhas Disciplinas",  alunoDoc})
 })
 
-// VISUALIZAR DISCIPLINA
+// VISUALIZAR DISCIPLINA // FIXME: QUEBROU EM ALGUM MOMENTO
 router.get("/disciplina/:disciplina_id", restrict, async (req: Request, res: Response) => {
     if (!req.params.disciplina_id) return res.sendStatus(400);
 
@@ -237,10 +270,19 @@ router.post("/upload", teacherRestrict, upload.single("file"), async (req: Reque
 router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) => {
     if (!req.params.chat_id) return res.sendStatus(400);
 
-    // TODO: atualizacao constante
-    const chat = req.params.chat_id
+    const chat_id = req.params.chat_id
+    const chat = await chatDB.findById(chat_id).populate({
+        path: "messages",
+        model: "Mensagem",
+        populate: { path: "sender", select: "name" }
+    })
 
-    res.render("chatroom", { title: "Chat da disciplina", })
+    if (!chat) return res.sendStatus(404);
+
+    // TODO: atualizacao constante
+    const currentuser = await UserDB.findById(req.session.user);
+
+    res.render("chatroom", { title: "Chat da disciplina", chat_id, currentuser, messages: chat.messages})
 })
 
 export default router;

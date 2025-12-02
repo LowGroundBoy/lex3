@@ -3,23 +3,24 @@ import session from "express-session";
 import path from "path";
 import routes from "../routes/routes"
 import mongoose from "mongoose";
+import http from "http";
+import { socketSetup } from "./socket";
 
-export const app = express();
+const app = express();
+const server = http.createServer(app);
 const port = 3001; // mudavel
 
 // CONFIG
 app.set("view engine", "ejs"); // pra renderizar templates
 app.set("views", path.join(__dirname, "../views")); // volta na pasta raiz e puxa da pasta views
 
-// TODO: middleware tirado do exemplo no github do proprio express, temporario possivelmente, nem olhei como funciona
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
   resave: false, // nao salva sessao se nada mudar
   saveUninitialized: false, // nao cria sessao até salvar algo
-  secret: '323251531' // TEMPORARIO !!!!!!!!!!!!!!!!!!!!
+  secret: '323251531' // FIXME: TEMPORARIO !!!!!!!!!!!!!!!!!!!!
 }));
 
-// TODO: mensagens de erro tiradas do exemplo tbm
 app.use(function(req, res, next){
   var err = req.session.error;
   var msg = req.session.success_msg;
@@ -67,13 +68,12 @@ async function startServer() {
     }
   }
 
-  app.listen(port, () => {
+  // socket.io (chat realtime)
+  socketSetup(server);
+
+  server.listen(port, () => {
     console.log(`Listening na porta ${port}`);
   });
 }
 
 startServer()
-
-
-
-

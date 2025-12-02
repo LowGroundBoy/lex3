@@ -18,7 +18,8 @@
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.2",
     "multer": "^2.0.2",
-    "pbkdf2-password": "^1.2.1"
+    "pbkdf2-password": "^1.2.1",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

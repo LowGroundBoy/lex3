@@ -1,6 +1,7 @@
   body {
         margin: 0;
         font: 13px Helvetica, Arial, sans-serif;
+        background: #f0f2f5;
       }
       .error { color: red; }
       .success { color: green; }
@@ -14,10 +15,9 @@
         max-width: 90%;
         margin: 0 auto; 
         background-color: white;
-        border-style: solid;
-        border-color: rgb(176, 176, 176);
+        border-style: none;
         border-radius: 10px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         padding: 20px;
       }
       .inputbox{
@@ -29,6 +29,7 @@
         border-radius: 14px;
       }
       .button {
+        text-decoration: none;
         font-size: 120%;
         color: white;
         padding: 10px;
@@ -38,6 +39,10 @@
         border-color: rgb(45, 120, 163);
         border-radius: 14px;
         cursor: pointer;
+        transition: 0.5s;
+      }
+      .button:hover {
+        background-color: rgb(34, 105, 146);
       }
       .barra-superior {
         background-color: #e4e4e4;
@@ -62,7 +67,6 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: calc(100vh - 60px);
         padding: 20px;
        }
       #foto_perfil{
@@ -78,4 +82,8 @@
         display: inline-block;
         width: 80%;
         margin-bottom: 15px;
+        transition: 0.5s;
+      }
+      .info-box:hover {
+        box-shadow: inset 0 0 20px rgba(84, 84, 84, 0.5);
       }

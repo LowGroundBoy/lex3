@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar turma</title>
+    <link rel="stylesheet" href="/css/minhas_disciplinas.css">
+</head>
+<body>
+
+    <!--  disciplinas (nome, horario) -->
+    <%- include("partials/header") %>
+    <%- include("partials/message") %>
+
+    
+<% if (disciplinas) { %>
+    <% for (let disciplina of disciplinas) { %>
+    <fieldset class="card"
+    style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
+        <p>
+        <label class="info-label">
+            <strong>Disciplina:</strong> <%= disciplina.nomeDisciplina %>
+        </label>
+        </p>
+
+        <p>
+        <label class="info-label">
+            <strong>Horário:</strong> <%= disciplina.horario %>
+        </label>
+        </p>
+
+        <p>
+        <label class="info-label">
+            <strong>
+            <a href="/chatroom/<%= disciplina.chatDisciplina %>">Chat da disciplina</a>
+            </strong>
+        </label>
+        </p>
+
+        <p>
+        <label class="info-label">
+            <a href="/editar_turma/<%= disciplina._id %>">Editar turma</a>
+        </label>
+        </p>
+    </fieldset>
+    <% } %>
+    <% } else { %>
+        <p>nothing to show here</p>
+    <% } %>
+    
+</body>
+</html>
