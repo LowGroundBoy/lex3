@@ -9,6 +9,22 @@
     <%- include("partials/header") %>
     <%- include("partials/message") %>
 
-    <h1>teste page</h1>
+    <div id="chat-window">
+        <% messages.forEach(msg => { %>
+            <div>
+                <%= msg.sender ? msg.sender.name : "Unknown" %>: <%= msg.content %>
+            </div>
+        <% }) %>
+        <input id="message-input" type="text" placeholder="Digite sua mensagem.">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chatroom.js"></script>
+    <script>
+        window.chatId = "<%= chat_id %>";
+        window.userid = "<%= currentuser._id %>";
+        initChat(window.chatId, window.userId);
+    </script>
 </body>
 </html>

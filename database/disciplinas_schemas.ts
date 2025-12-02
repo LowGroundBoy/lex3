@@ -18,8 +18,3 @@ const disciplinaSchema = new Schema<IDisciplina>({
 
 
 export const DisciplinasDB = mongoose.model<IDisciplina>('Disciplina', disciplinaSchema);
-
-
-
-
-

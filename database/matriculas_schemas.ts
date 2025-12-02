@@ -16,4 +16,3 @@ const matriculasInterface = new Schema<IMatricula>({
 matriculasInterface.index({ aluno: 1, disciplina: 1 }, { unique: true });
 
 export const MatriculasDB = mongoose.model<IMatricula>("Matricula", matriculasInterface);
-

@@ -6,6 +6,7 @@ import { UserDB, Aluno, Professor} from "../database/user_schemas";
 import { MatriculasDB} from "../database/matriculas_schemas";
 import { create_disciplina, find_all, editar_usuarios_disciplina } from "../database/dbfunctions";
 import { upload } from "../src/multerconfig";
+import { chatDB } from "../database/conversationschemas";
 
 const router = Router()
 
@@ -269,10 +270,19 @@ router.post("/upload", teacherRestrict, upload.single("file"), async (req: Reque
 router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) => {
     if (!req.params.chat_id) return res.sendStatus(400);
 
-    // TODO: atualizacao constante
-    const chat = req.params.chat_id
+    const chat_id = req.params.chat_id
+    const chat = await chatDB.findById(chat_id).populate({
+        path: "messages",
+        model: "Mensagem",
+        populate: { path: "sender", select: "name" }
+    })
 
-    res.render("chatroom", { title: "Chat da disciplina", })
+    if (!chat) return res.sendStatus(404);
+
+    // TODO: atualizacao constante
+    const currentuser = await UserDB.findById(req.session.user);
+
+    res.render("chatroom", { title: "Chat da disciplina", chat_id, currentuser, messages: chat.messages})
 })
 
 export default router;

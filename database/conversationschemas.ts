@@ -18,9 +18,10 @@ const chatSchema = new Schema<IChat>({
 })
 
 const messageSchema = new Schema<IMensagem>({
-    sender: {type: Schema.Types.ObjectId, ref: "remetente"},
+    sender: {type: Schema.Types.ObjectId, ref: "User"},
     content: {type: String},
     crDate: {type: Date, default: Date.now},
 })
 
+export const messageDB = mongoose.model<IMensagem>("Mensagem", messageSchema);
 export const chatDB = mongoose.model<IChat>("Chat", chatSchema);

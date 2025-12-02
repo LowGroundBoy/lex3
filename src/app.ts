@@ -3,8 +3,11 @@ import session from "express-session";
 import path from "path";
 import routes from "../routes/routes"
 import mongoose from "mongoose";
+import http from "http";
+import { socketSetup } from "./socket";
 
-export const app = express();
+const app = express();
+const server = http.createServer(app);
 const port = 3001; // mudavel
 
 // CONFIG
@@ -65,13 +68,12 @@ async function startServer() {
     }
   }
 
-  app.listen(port, () => {
+  // socket.io (chat realtime)
+  socketSetup(server);
+
+  server.listen(port, () => {
     console.log(`Listening na porta ${port}`);
   });
 }
 
 startServer()
-
-
-
-
