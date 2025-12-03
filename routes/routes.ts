@@ -149,9 +149,9 @@ router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) =
     return res.render("todas_disciplinas", { title: "Todas Disciplinas", todas_disciplinas })
 })
 
-// VISUALIZACAO MINHAS DISCIPLINAS // FIXME: QUEBROU EM ALGUM MOMENTO
+// VISUALIZACAO MINHAS DISCIPLINAS 
 router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
-    if (req.session.accesslvl === "Professor") { res.redirect("/minhas_turmas") }
+    if (req.session.accesslvl === "Professor") { return res.redirect("/minhas_turmas") }
     const alunoatual = req.session.user
     const alunoDoc = await MatriculasDB.find({ aluno: alunoatual })
     .populate({
