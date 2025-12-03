@@ -1,74 +1,99 @@
-    body {
-      margin: 0;
-      font: 13px Helvetica, Arial, sans-serif;
-    }
-    .error { color: red; }
-    .success { color: green; }
-    h1 {
-      text-align: center;
-    }
-    .button {
-      font-size: 120%;
-      color: white;
-      padding: 10px;
-      width: 58%;
-      background-color: rgb(56, 151, 205);
-      border-style: solid;
-      border-color: rgb(45, 120, 163);
-      border-radius: 14px;
-      cursor: pointer;
-    }
-    .barra-superior {
-      background-color: #e4e4e4;
-      color: rgb(49, 146, 188);
-      height: 60px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-      box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
-    }
-    .barra-superior a {
-      color: rgb(0, 0, 0);
-      text-decoration: none;
-      margin-left: 15px;
-    }
-    .barra-superior a:hover {
-      text-decoration: underline;
-    }
-    .pagina {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: calc(100vh - 60px);
-      padding: 20px;
-    }
-    table {
-      border-collapse: collapse;
-      margin-top: 20px;
-      width: 90%;
-      max-width: 900px;
-      background-color: white;
-      box-shadow: 5px 5px 10px rgba(0,0,0,0.15);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th, td {
-      border: 1px solid #d0d0d0;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: rgb(56, 151, 205);
-      color: white;
-      font-weight: bold;
-    }
-    td input {
-      width: 60px;
-      padding: 6px;
-      border-radius: 8px;
-      background-color: rgb(226, 226, 226);
-      border: 1px solid rgb(158, 158, 158);
-      text-align: center;
-    }
+      body {
+        margin: 0;
+        font: 13px Helvetica, Arial, sans-serif;
+      }
+      .error { color: red; }
+      .success { color: green; }
+
+      h1 {
+        text-align: center;
+      }
+      #login_box {
+        text-align: center;
+        width: 400px;
+        max-width: 90%;
+        margin: 0 auto; 
+        background-color: white;
+        border-style: solid;
+        border-color: rgb(176, 176, 176);
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        padding: 20px;
+      }
+      .inputbox {
+        font-size: 130%;
+        padding: 7px;
+        background-color: rgb(226, 226, 226);
+        border-style: solid;
+        border-color: rgb(158, 158, 158);
+        border-radius: 14px;
+      }
+      textarea {
+        font-size: 130%;
+        height: 200px;
+        padding: 7px;
+        background-color: rgb(226, 226, 226);
+        border-style: solid;
+        border-color: rgb(158, 158, 158);
+        border-radius: 14px;
+      }
+      .button {
+        font-size: 120%;
+        color: white;
+        padding: 10px;
+        width: 58%;
+        background-color: rgb(56, 151, 205);
+        border-style: solid;
+        border-color: rgb(45, 120, 163);
+        border-radius: 14px;
+        cursor: pointer;
+      }
+      #lista_alunos {
+        margin-top: 15px;
+        text-align: left;
+        list-style-type: none;
+        padding-left: 0;
+      }
+      #lista_alunos li {
+        background-color: #f0f0f0;
+        margin: 5px 0;
+        padding: 6px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .remove-btn {
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 3px 6px;
+        cursor: pointer;
+      }
+      .barra-superior {
+        background-color: #e4e4e4;
+        color: rgb(49, 146, 188);
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+      }
+      .barra-superior a {
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        margin-left: 15px;
+      }
+      .barra-superior a:hover {
+        text-decoration: underline;
+      }
+      .pagina{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 60px);
+        padding: 20px;
+       }

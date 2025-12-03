@@ -8,8 +8,8 @@ interface IMatricula extends Document {
 };
 
 const matriculasInterface = new Schema<IMatricula>({
-    aluno: {type: Schema.Types.ObjectId, ref:"User", required: true},
-    disciplina: {type: Schema.Types.ObjectId, required: true},
+    aluno: {type: Schema.Types.ObjectId, ref: "User", required: true},
+    disciplina: {type: Schema.Types.ObjectId, ref:"Disciplina", required: true},
     nota: {type: Number, default: null},
 });
 

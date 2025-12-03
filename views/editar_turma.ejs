@@ -8,21 +8,21 @@
 </head>
 <body>
 
-    <!--  disciplina_selecionada (nome, horario), matriculas (aluno (populado com nome, etc), disciplina) -->
     <%- include("partials/header") %>
     <%- include("partials/message") %>
 
     <% if (disciplina_selecionada && matriculas) { %>
 
         <div class="pagina">
-
+        <h1><%= disciplina_selecionada.nomeDisciplina %></h1>
         <table class="tabela-alunos">
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Semestre</th>
-                    <th>Ação</th>
-                    <th>Remover</th>
+                    <th></th>
+                    <th></th>
+                    <th>Nota Calculada</th>
                 </tr>
             </thead>
 
@@ -31,9 +31,13 @@
                     <tr>
                         <td><%= m.aluno.nome %></td>
                         <td><%= m.aluno.semestre %></td>
-                        <td><button class="button">Editar notas</button></td> <!--editar-button-->
-                        <td><button class="button">Remover matrícula</button></td> <!--danger-button-->
-                    </tr>
+                        <td><button class="editar_notas button"
+                                data-aluno-id="<%= m.aluno._id %>"
+                                data-matricula-id="<%= m._id %>">
+                            Editar notas
+                        </button></td> 
+                        <td><button class="button">Remover matrícula</button></td> 
+                        <td><%= m.nota ?? 0.0 %></td> 
                 <% } %>
             </tbody>
         </table>
@@ -43,7 +47,28 @@
 
     </div>  
 
+    <div id="modal_notas" class="modal">
+        <span class="close-button">&times;</span>
+
+        <table class="notas-table">
+            <thead>
+                <tr>
+                    <th>G1</th>
+                    <th>G2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="number" id="nota_g1" min="0" max="10"></td>
+                    <td><input type="number" id="nota_g2"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="save_grade" class="button">Salvar</button>
+    </div>
+
     <% } %>
 
+    <script src="/js/editar_turma.js"></script>
 </body>
 </html>

@@ -9,6 +9,8 @@ db = client["test"]
 users = db["users"]
 disciplinas = db["disciplinas"]
 matriculas = db["matriculas"]
+chats = db["chats"]              # NEW
+mensagens = db["mensagems"]      # will stay empty initially
 
 # --------------------------
 # helpers
@@ -21,7 +23,7 @@ def hash_password(pwd: str) -> str:
 
 
 # --------------------------
-# insert Professor
+# Insert Professor
 # --------------------------
 
 prof_id = ObjectId()
@@ -36,10 +38,10 @@ professor = {
 }
 
 users.insert_one(professor)
-print("Inserted Professor:", professor["_id"])
+
 
 # --------------------------
-# insert Alunos
+# Insert Alunos
 # --------------------------
 
 aluno1_id = ObjectId()
@@ -66,10 +68,25 @@ aluno2 = {
 }
 
 users.insert_many([aluno1, aluno2])
-print("Inserted Alunos:", aluno1["_id"], aluno2["_id"])
+
 
 # --------------------------
-# insert Disciplina
+# Create Chatroom for the Disciplina
+# --------------------------
+
+chat_id = ObjectId()
+
+chatroom = {
+    "_id": chat_id,
+    "disciplina": None,     # will fill after disciplina is created
+    "messages": []
+}
+
+chats.insert_one(chatroom)
+
+
+# --------------------------
+# Insert Disciplina WITH chatroom
 # --------------------------
 
 disciplina_id = ObjectId()
@@ -79,14 +96,20 @@ disciplina = {
     "nomeDisciplina": "Matemática I",
     "horario": "Terças 10:00",
     "professorResponsavel": prof_id,
-    "chatDisciplina": None
+    "chatDisciplina": chat_id   # ← CONNECT CHAT HERE
 }
 
 disciplinas.insert_one(disciplina)
-print("Inserted Disciplina:", disciplina["_id"])
+
+# Now update chat so disciplina links back
+chats.update_one(
+    {"_id": chat_id},
+    {"$set": {"disciplina": disciplina_id}}
+)
+
 
 # --------------------------
-# insert Matrículas (Aluno ↔ Disciplina)
+# Insert Matrículas
 # --------------------------
 
 mat1 = {
@@ -102,4 +125,5 @@ mat2 = {
 }
 
 matriculas.insert_many([mat1, mat2])
-print("Inserted Matrículas for disciplina:", disciplina_id)
+
+print("Finished.")

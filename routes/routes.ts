@@ -1,5 +1,5 @@
 import { Router, NextFunction, Request, Response } from "express";
-import { authenticate, restrict, create_user, teacherRestrict } from "../src/auth";
+import { authenticate, restrict, teacherRestrict, disciplinaRestrict } from "../src/auth";
 import { DisciplinasDB } from "../database/disciplinas_schemas";
 import { MaterialDB } from "../database/materiais_schemas";
 import { UserDB, Aluno, Professor} from "../database/user_schemas";
@@ -12,40 +12,25 @@ const router = Router()
 
 // HOMEPAGE
 router.get('/', (req: Request, res: Response) =>{
-    res.render("home", { title: "Lex3"}); // render: html, att
+    if (req.session.user) {
+        if (req.session.accesslvl === "Professor") { return res.render("home_professor", {title: "Lex3"}); }
+        else { return res.render("home_aluno", {title: "Lex3"}); }
+    }
+
+    return res.render("home", { title: "Lex3"});
 });
-
-//  REGISTER
-router.get("/register", (req: Request, res: Response) =>{ // NAO FAZ NADA AINDA
-    res.render("registrar", { title: "Registrar"})
-});
-router.post("/register", (req: Request, res: Response, next: NextFunction) => {
-    if (!req.body) return res.sendStatus(400)
-
-    create_user(req.body.username, req.body.nome, req.body.password, req.body.type, req.body.semestre, function(code, msg){
-
-        if (code === 1) {
-            req.session.success_msg = "Usuário criado com sucesso, faça login com a nova conta para continuar"
-            res.redirect("/login")
-        }
-        else { 
-            req.session.error = "Ocorreu um erro na criação de usuário"
-            res.redirect("/register")
-        }
-    })
-})
 
 // LOGOUT
 router.get("/logout", (req: Request, res: Response) => { // destroi a sessao do usuario pra deixar relogar
     
     req.session.destroy(() => {
-        res.redirect("/");
+        return res.redirect("/");
     });
 });
 
 // LOGIN
 router.get("/login", (req: Request, res: Response) => {
-    res.render("login", {title: "Login"});
+    return res.render("login", {title: "Login"});
 });
 // dá pra fazer coisas diferentes dependendo do tipo de request em certo endpoint ex abaixo e acima
 router.post("/login", (req: Request, res: Response, next: NextFunction) => {
@@ -60,12 +45,12 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
             req.session.regenerate(function(){
                 req.session.user = username 
                 req.session.accesslvl = acess!
-                res.redirect("/perfil"); // volta pra pagina anterir ou /
+                return res.redirect("/perfil"); // volta pra pagina anterir ou /
             });
         } 
         else {
             req.session.error = "Autenticação falhou, verifique o usuário e senha"
-            res.redirect('/login')
+            return res.redirect('/login')
         };
     });
 });
@@ -76,14 +61,14 @@ router.get("/perfil", restrict, async (req: Request, res: Response) => {
     console.log(req.session.user)
     const profiledata = userdoc?.get_profile();
     
-    res.render("meu_perfil", {title: "Perfil do usuário", profile: profiledata});
+    return res.render("meu_perfil", {title: "Perfil do usuário", profile: profiledata});
 });
 
 // CADASTRO DE DISCIPLINAS
 router.get("/cadastro_disciplina", teacherRestrict, async (req: Request, res: Response) => {
     const professoreslist = await find_all("Professores")
 
-    res.render("cadastro_disciplina", { title: "Cadastro de disciplinas", professores: professoreslist});
+    return res.render("cadastro_disciplina", { title: "Cadastro de disciplinas", professores: professoreslist});
 });
 
 router.post("/cadastro_disciplina", teacherRestrict, async (req, res) => {
@@ -115,10 +100,10 @@ router.get("/minhas_turmas", teacherRestrict, async (req: Request, res: Response
 
     const disciplinas = await DisciplinasDB.find({ professorResponsavel: prof._id })
 
-    res.render("minhas_turmas", { title: "Minhas turmas", disciplinas } )
+    return res.render("minhas_turmas", { title: "Minhas turmas", disciplinas } )
 })
 
-// EDICAO DISCIPLINAS, CONTROLE DE TURMA TODO: FAZER ESSA ROTA FAZER ALGO
+
 router.get("/editar_turma/:disciplina", teacherRestrict, async (req: Request, res: Response) => {
     if (!req.params.disciplina) return res.sendStatus(400);
 
@@ -126,7 +111,7 @@ router.get("/editar_turma/:disciplina", teacherRestrict, async (req: Request, re
     const matriculas = await MatriculasDB.find({ disciplina: disciplina_selecionada}).populate("aluno");
     console.log(matriculas)
 
-    res.render("editar_turma", { title: "Editar turmas", matriculas, disciplina_selecionada })
+    return res.render("editar_turma", { title: "Editar turmas", matriculas, disciplina_selecionada })
 })
 
 // ADICIONAR ALUNOS A DISCIPLINAS
@@ -136,7 +121,7 @@ router.get("/matricular_alunos", teacherRestrict, async (req: Request, res: Resp
     alunos.forEach(e => {console.log(e)})
     const disciplinas = await find_all("Disciplinas")
 
-    res.render("matricular_alunos", { title: "Matricular alunos", alunos, disciplinas})
+    return res.render("matricular_alunos", { title: "Matricular alunos", alunos, disciplinas})
 })
 // TODO: EXCLUSAO DE ALUNOS DA DISC
 router.post("/matricular_alunos", teacherRestrict, async (req: Request, res: Response) => {
@@ -161,23 +146,32 @@ router.post("/matricular_alunos", teacherRestrict, async (req: Request, res: Res
 router.get("/todas_disciplinas", restrict, async (req: Request, res: Response) => {
     const todas_disciplinas = await find_all("Disciplinas") // precisa declarar como async, ja que a funcao callada é
 
-    res.render("todas_disciplinas", { title: "Todas Disciplinas", todas_disciplinas })
+    return res.render("todas_disciplinas", { title: "Todas Disciplinas", todas_disciplinas })
 })
 
-// VISUALIZACAO MINHAS DISCIPLINAS
+// VISUALIZACAO MINHAS DISCIPLINAS 
 router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) => {
-    if (req.session.accesslvl === "Professor") { res.redirect("/minhas_turmas") }
+    if (req.session.accesslvl === "Professor") { return res.redirect("/minhas_turmas") }
     const alunoatual = req.session.user
-    const alunoDoc = await MatriculasDB.find({ aluno: alunoatual }).populate("disciplina")
+    const alunoDoc = await MatriculasDB.find({ aluno: alunoatual })
+    .populate({
+        path: "disciplina",
+        populate: {
+            path: "professorResponsavel",
+            model: "User",
+            select: "nome" 
+        }
+    });
+
     console.log(alunoDoc) // FIXME: REMOVER TODOS CONSOLE LOGS
 
     if (!alunoDoc) {throw Error("Aluno não encontrado")}
 
-    res.render("minhas_disciplinas", { title: "Minhas Disciplinas",  alunoDoc})
+    return res.render("minhas_disciplinas", { title: "Minhas Disciplinas",  alunoDoc})
 })
 
-// VISUALIZAR DISCIPLINA // FIXME: QUEBROU EM ALGUM MOMENTO
-router.get("/disciplina/:disciplina_id", restrict, async (req: Request, res: Response) => {
+// VISUALIZAR DISCIPLINA // 
+router.get("/disciplina/:disciplina_id", restrict, disciplinaRestrict, async (req: Request, res: Response) => {
     if (!req.params.disciplina_id) return res.sendStatus(400);
 
     // TODO: LIMITAR SÓ PRA ALUNOS DA TURMA VISUALIZAREM // talvez um query no db simples pra ver se o logado bate
@@ -186,7 +180,7 @@ router.get("/disciplina/:disciplina_id", restrict, async (req: Request, res: Res
     const chatid = disciplina!.chatDisciplina;
     const materiais = await MaterialDB.findOne({ disciplina: req.params.disciplina_id })
 
-    res.render("visualizar_disciplina", {title: "Visualizar Disciplina", disciplina , chatid, materiais})
+    return res.render("visualizar_disciplina", {title: "Visualizar Disciplina", disciplina , chatid, materiais})
 })
 
 // MATERIAIS VISUALIZAÇÃO
@@ -195,7 +189,7 @@ router.get("/materiais", restrict, async (req: Request, res: Response) => {
     const todosMateriais = await find_all("Materiais")
     console.log(todosMateriais)
 
-    res.render("materiais", { title: "Materiais de disciplina", todosMateriais })
+    return res.render("materiais", { title: "Materiais de disciplina", todosMateriais })
 })
 
 // DOWNLOAD MATERIAL
@@ -211,7 +205,7 @@ router.get("/download/:file", restrict, async (req: Request, res: Response) => {
     }
     else { 
         req.session.error = "file not found"
-        res.redirect("/materiais")
+        return res.redirect("/materiais")
      }
 })
 
@@ -221,7 +215,7 @@ router.post("/video_player", restrict, async (req: Request, res: Response) => {
     const videoselecionado = req.body.videoselecionado
     const videodoc = await MaterialDB.findOne({ _id: videoselecionado })
     
-    res.render("video_player", { title: "Video player", video: videodoc })
+    return res.render("video_player", { title: "Video player", video: videodoc })
 })
 
 // PDF VIEWER
@@ -230,14 +224,14 @@ router.post("/pdf_viewer", restrict, async (req: Request, res: Response) => {
     const pdfselecionado = req.body.pdfselecionado
     const pdfdoc = await MaterialDB.findOne({ _id: pdfselecionado })
     
-    res.render("pdf_viewer", { title: "Visualizador de pdf", pdf: pdfdoc })
+    return res.render("pdf_viewer", { title: "Visualizador de pdf", pdf: pdfdoc })
 })
 
 // UPLOAD MATERIAIS
 router.get("/upload", teacherRestrict, async (req: Request, res: Response) => {
   const disciplinas = await find_all("Disciplinas")
 
-  res.render("upload", { title: "Upload de materiais", disciplinas })
+  return res.render("upload", { title: "Upload de materiais", disciplinas })
 })
 
 router.post("/upload", teacherRestrict, upload.single("file"), async (req: Request, res: Response) => { // da pra usar varias funcoes antes de rodar o endpoint EXEMPLO AQUI <
@@ -263,7 +257,7 @@ router.post("/upload", teacherRestrict, upload.single("file"), async (req: Reque
     })
 
     req.session.success_msg = "Upload concluído"
-    res.redirect("/upload");
+    return res.redirect("/upload");
 })
 
 // CHAT DISCIPLINAS
@@ -274,7 +268,7 @@ router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) =
     const chat = await chatDB.findById(chat_id).populate({
         path: "messages",
         model: "Mensagem",
-        populate: { path: "sender", select: "name" }
+        populate: { path: "sender", select: "nome" }
     })
 
     if (!chat) return res.sendStatus(404);
@@ -282,7 +276,27 @@ router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) =
     // TODO: atualizacao constante
     const currentuser = await UserDB.findById(req.session.user);
 
-    res.render("chatroom", { title: "Chat da disciplina", chat_id, currentuser, messages: chat.messages})
+    return res.render("chatroom", { title: "Chat da disciplina", chat_id, currentuser, messages: chat.messages})
 })
+
+router.post("/update_nota", teacherRestrict, async (req: Request, res: Response) => {
+    const g1 = Number(req.body.g1);
+    const g2 = Number(req.body.g2);
+    const matriculaId = req.body.matriculaId;
+
+    const media = (g1 + g2) / 2;
+
+    console.log(media)
+    console.log("tetando atualizar")
+
+    const atualizarnota = await MatriculasDB.findByIdAndUpdate(
+        matriculaId,
+        {nota: media}
+    );
+    if (!atualizarnota) { return res.sendStatus(418) }
+
+    console.log("nota atualizada")
+    return res.sendStatus(200);
+});
 
 export default router;

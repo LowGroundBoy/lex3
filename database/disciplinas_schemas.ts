@@ -12,7 +12,7 @@ interface IDisciplina extends Document {
 const disciplinaSchema = new Schema<IDisciplina>({
     nomeDisciplina: {type: String, unique: true, required: true},
     horario: {type: String, required: true},
-    professorResponsavel: {type: Schema.Types.ObjectId},
+    professorResponsavel: {type: Schema.Types.ObjectId, ref: "User"},
     chatDisciplina: {type: Schema.Types.ObjectId, ref: "Chat", default: null},
 })
 
