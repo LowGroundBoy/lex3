@@ -1,6 +1,8 @@
         body {
         margin: 0;
-        font: 13px Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        background: #f0f2f5;
       }
       .error { color: red; }
       .success { color: green; }
@@ -17,10 +19,9 @@
         max-width: 90%;
         margin: 25px auto; 
         background-color: white;
-        border-style: solid;
-        border-color: rgb(176, 176, 176);
+        border-style: none;
         border-radius: 10px;
-        box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         padding: 20px;
         transition: 0.5s;
       }
@@ -37,9 +38,36 @@
       .card:hover{
         background-color: rgb(181, 218, 239);
         cursor: pointer;
-        box-shadow:
-          inset 0 0 25px rgba(255, 255, 255, 0.7), 
-          0 0 12px rgba(255, 255, 255, 0.6);    
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      }
+      .card2 {
+        position: relative;
+        text-decoration: none;
+        color: black;
+        text-align: center;
+        width: 400px;
+        max-width: 90%;
+        margin: 25px auto; 
+        background-color: white;
+        border-style: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        padding: 20px;
+        transition: 0.5s;
+      }
+      .card2::after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        bottom: 10px;
+        right: 10px; /* distância da borda direita */
+        width: 6px;  /* espessura da linha */
+        border-radius: 10px;
+        background-color: var(--cor-linha); /* cor dinâmica */
+      }
+      .card2:hover{
+        background-color: rgb(181, 218, 239);  
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       }
       .inputbox{
         font-size: 130%;
@@ -50,15 +78,24 @@
         border-radius: 14px;
       }
       .button {
-        font-size: 120%;
+        text-decoration: none;
+        font-size: 100%;
         color: white;
-        padding: 10px;
-        width: 58%;
+        padding: 5px;
+        width: 90%;
         background-color: rgb(56, 151, 205);
         border-style: solid;
         border-color: rgb(45, 120, 163);
-        border-radius: 14px;
+        border-radius: 10px;
         cursor: pointer;
+        display: block;  
+        margin-bottom: 10px;
+        margin-left: 10px;
+        transition: 0.5s;
+      }
+      .button:hover{
+        background-color: rgb(51, 131, 177);
+        box-shadow: inset 0 0 20px rgba(185, 185, 185, 0.5);
       }
       .barra-superior {
         background-color: #e4e4e4;
