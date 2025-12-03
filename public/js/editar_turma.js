@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const g1 = document.getElementById("nota_g1").value;
         const g2 = document.getElementById("nota_g2").value;
 
-        console.log(g1,g2,currentMatricula)
         await fetch("/update_nota", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

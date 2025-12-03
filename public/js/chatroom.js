@@ -6,12 +6,11 @@ function initChat(chatId, sendername) {
     socket.on("connect", () => console.log("connected to server"));
 
     socket.emit("join", chatId);
-    console.log("joined room", chatId);
 
     socket.on("newMsg", msg => {
         const chatWindow = document.getElementById("chat-window");
         const div = document.createElement("div");
-        div.textContent = `${msg.sender}: ${msg.content}`;
+        div.textContent = `${msg.sender}: ${msg.content} (${msg.crDate})`;
         chatWindow.appendChild(div);
     });
 }
@@ -25,8 +24,6 @@ function sendMessage(){
         sender: window.userId,
         content: input.value
     });
-
-    console.log("message sent")
 
     input.value = "";
 }

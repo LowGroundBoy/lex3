@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(session({
   resave: false, // nao salva sessao se nada mudar
   saveUninitialized: false, // nao cria sessao até salvar algo
-  secret: '323251531' // FIXME: TEMPORARIO !!!!!!!!!!!!!!!!!!!!
+  secret: '263ca094d5b0086e7aaf8626b46d47ace319dcb1c5efbef267dd0632007cdc93' 
 }));
 
 app.use(function(req, res, next){

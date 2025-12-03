@@ -1,8 +1,6 @@
-import session from "express-session";
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Aluno, Professor, UserDB } from "../database/user_schemas";
 import { DisciplinasDB } from "../database/disciplinas_schemas";
-import { MatriculasDB } from "../database/matriculas_schemas";
 import bcrypt from "bcrypt"
 
 // AUTENTICAR SENHA

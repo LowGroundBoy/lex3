@@ -58,7 +58,6 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
 // PERFIL
 router.get("/perfil", restrict, async (req: Request, res: Response) => { 
     const userdoc = await UserDB.findById(req.session.user);
-    console.log(req.session.user)
     const profiledata = userdoc?.get_profile();
     
     return res.render("meu_perfil", {title: "Perfil do usuário", profile: profiledata});
@@ -109,7 +108,6 @@ router.get("/editar_turma/:disciplina", teacherRestrict, async (req: Request, re
 
     const disciplina_selecionada = await DisciplinasDB.findById(req.params.disciplina);
     const matriculas = await MatriculasDB.find({ disciplina: disciplina_selecionada}).populate("aluno");
-    console.log(matriculas)
 
     return res.render("editar_turma", { title: "Editar turmas", matriculas, disciplina_selecionada })
 })
@@ -163,7 +161,6 @@ router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) 
         }
     });
 
-    console.log(alunoDoc) // FIXME: REMOVER TODOS CONSOLE LOGS
 
     if (!alunoDoc) {throw Error("Aluno não encontrado")}
 
@@ -173,8 +170,6 @@ router.get("/minhas_disciplinas", restrict, async (req: Request, res: Response) 
 // VISUALIZAR DISCIPLINA // 
 router.get("/disciplina/:disciplina_id", restrict, disciplinaRestrict, async (req: Request, res: Response) => {
     if (!req.params.disciplina_id) return res.sendStatus(400);
-
-    // TODO: LIMITAR SÓ PRA ALUNOS DA TURMA VISUALIZAREM // talvez um query no db simples pra ver se o logado bate
 
     const disciplina = await DisciplinasDB.findOne({_id: req.params.disciplina_id});
     const chatid = disciplina!.chatDisciplina;
@@ -187,7 +182,6 @@ router.get("/disciplina/:disciplina_id", restrict, disciplinaRestrict, async (re
 router.get("/materiais", restrict, async (req: Request, res: Response) => {
 
     const todosMateriais = await find_all("Materiais")
-    console.log(todosMateriais)
 
     return res.render("materiais", { title: "Materiais de disciplina", todosMateriais })
 })
@@ -273,7 +267,6 @@ router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) =
 
     if (!chat) return res.sendStatus(404);
 
-    // TODO: atualizacao constante
     const currentuser = await UserDB.findById(req.session.user);
 
     return res.render("chatroom", { title: "Chat da disciplina", chat_id, currentuser, messages: chat.messages})
@@ -286,16 +279,12 @@ router.post("/update_nota", teacherRestrict, async (req: Request, res: Response)
 
     const media = (g1 + g2) / 2;
 
-    console.log(media)
-    console.log("tetando atualizar")
-
     const atualizarnota = await MatriculasDB.findByIdAndUpdate(
         matriculaId,
         {nota: media}
     );
     if (!atualizarnota) { return res.sendStatus(418) }
 
-    console.log("nota atualizada")
     return res.sendStatus(200);
 });
 
