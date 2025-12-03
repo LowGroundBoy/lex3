@@ -1,9 +1,16 @@
+    html{
+        font-family: 'Montserrat', sans-serif;
+    }
     body {
         margin: 0;
-        font: 13px Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
+        background: #e2e5e8;
+
         }
 
     .button{
+        font-family: 'Montserrat', sans-serif;
         font-size: 120%;
         color: white;
         padding: 10px;
@@ -18,39 +25,70 @@
       }
     .button:hover{
         background-color: rgb(43, 112, 152);
+        box-shadow: inset 0 0 20px rgba(185, 185, 185, 0.5);
         cursor: pointer;
     }
     .pagina{
         display: flex;
         flex-direction:column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         min-height: calc(100vh - 60px);
-        padding: 20px;
     }
     .atalhos{
+        background-color: rgb(255, 255, 255);
         display: flex;
         align-items: center;
         flex-direction: row;
         padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        border-radius: 20px;
+    }
+
+    header, .header {
+        margin: 0 !important;
     }
     .container {
-        position: relative; /* referência */
-        width: 1000px;
-        height: 600px;
+        position: relative; 
+        width: 100%;
+        max-width: 1550px;
+        height: 400px;
+        overflow: hidden;
+
+    }
+    .container::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40%; /* altura do fade */
+        background: linear-gradient(
+            to top,
+            rgba(37, 127, 218, 0.8),
+            rgba(0, 0, 0, 0)
+        );
+        z-index: 2;
+        pointer-events: none;
     }
 
     .img1 {
-        position: absolute;
+        position: relative;
         top: 0;
         left: 0;
-        width: 110%;
-        height: 90%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        z-index: 1;
     }
     .img2 {
         position: absolute;
-        top: 300px;
+        top: 230px;
         left: 130px;
-        width: 60%;
-        height: 30%;
+        width: 32%;
+        height: 35%;
+        z-index: 3;
     }
+
+
