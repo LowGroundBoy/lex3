@@ -26,21 +26,22 @@
         <h1>Matricular alunos</h1>
         <fieldset id="login_box">
         <form action="/matricular_alunos" method="POST">
-          <label>Disciplina:</label>
-          <select name="disciplina_selecionada" required>
+
+          <label>Disciplina</label><br>
+          <select name="disciplina_selecionada" class="inputbox" required>
             <% disciplinas.forEach(d => { %>
               <option value="<%= d._id %>"><%= d.nomeDisciplina %> (<%= d._id %>)</option>
             <% }) %>
           </select><br><br>
 
-        <label>Alunos a adicionar</label>
-        <select name="aluno_selecionado" required>
+        <label>Alunos a adicionar</label><br>
+        <select name="aluno_selecionado" class="inputbox" required>
           <% alunos.forEach(aluno => { %>
             <option  value="<%= aluno._id %>"><%= aluno.nome %> (<%= aluno._id %>)</option>
          <%  }) %>
         </select><br><br>
         
-        <button type="submit">Matricular alunos selecionados</button>
+        <button type="submit" class="button">Matricular alunos selecionados</button>
         </form>
       </fieldset>
     <% } %>

@@ -13,9 +13,10 @@
     <%- include("partials/message") %>
 
     <div class="pagina">
-      <h1>Cadastro de Disciplina</h1>
+      
 
       <fieldset id="login_box">
+        <h1>Cadastro de Disciplina</h1>
         <form method="post" action="/cadastro_disciplina" onsubmit="return prepararEnvio()">
           <p>
             <label for="disciplina">Nome da Disciplina</label><br>
@@ -30,7 +31,7 @@
           
           <p>
           <label for="professorSelecionado">Professor Responsável:</label><br>
-          <select name="professorSelecionado" required>
+          <select name="professorSelecionado" class="inputbox" required>
             <% professores.forEach(p => { %>
               <option value="<%= p._id %>"><%= p.nomeDisciplina %> (<%= p.nome %>)</option>
             <% }) %>

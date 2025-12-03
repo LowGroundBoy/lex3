@@ -15,7 +15,7 @@
     
 <% if (disciplinas) { %>
     <% for (let disciplina of disciplinas) { %>
-    <fieldset class="card"
+    <fieldset class="card2"
     style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
         <p>
         <label class="info-label">
@@ -31,15 +31,13 @@
 
         <p>
         <label class="info-label">
-            <strong>
-            <a href="/chatroom/<%= disciplina.chatDisciplina %>">Chat da disciplina</a>
-            </strong>
+            <a href="/chatroom/<%= disciplina.chatDisciplina %>" class="button">Chat da disciplina</a>
         </label>
         </p>
 
         <p>
         <label class="info-label">
-            <a href="/editar_turma/<%= disciplina._id %>">Editar turma</a>
+            <a href="/editar_turma/<%= disciplina._id %>" class="button">Editar turma</a>
         </label>
         </p>
     </fieldset>

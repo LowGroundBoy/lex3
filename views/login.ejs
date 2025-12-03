@@ -8,24 +8,26 @@
   </head>
   
   <body>
-    <h1>Login</h1>
+    
     <%- include("partials/message") %>
       <fieldset id="login_box">
-      <form method="post" action="/login">
-        <p>
-          <label for="username">Username</label>
-          <br>
-          <input type="text" name="username" id="username" class="inputbox">
-        </p>
-        <p>
-          <label for="password">Password</label>
-          <br>
-          <input type="text" name="password" id="password" class="inputbox">
-        </p>
-        <p>
-          <input type="submit" value="Login" class="button">
-        </p>
-      </form>
+        <h1>Entre na sua conta</h1>
+
+        <form method="post" action="/login">
+          <p>
+            <label for="username">Username</label>
+            <br>
+            <input type="text" name="username" id="username" class="inputbox">
+          </p>
+          <p>
+            <label for="password">Password</label>
+            <br>
+            <input type="text" name="password" id="password" class="inputbox">
+          </p>
+          <p>
+            <input type="submit" value="Login" class="button">
+          </p>
+        </form>
     </fieldset>
   </body>
 </html>

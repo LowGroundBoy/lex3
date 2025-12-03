@@ -4,22 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
     <link rel="stylesheet" href="/css/chatroom.css">
-    <title>Document</title>
+    <title><%= title %></title>
 </head>
 <body>
     
     <%- include("partials/header") %>
     <%- include("partials/message") %>
 
-    <div id="chat-window">
-        <% messages.forEach(msg => { %>
-            <div>
-                <%= msg.sender ? msg.sender.nome : "Unknown" %>: <%= msg.content %> (<%= msg.crDate %>)
-            </div>
-        <% }) %>
-    </div> 
-    <input id="message-input" type="text" placeholder="Digite sua mensagem.">
-    <button onclick="sendMessage()">Enviar</button>
+    <div class="pagina">
+        <h1>Chat</h1>
+
+        <div id="chat-window">
+            <% messages.forEach(msg => { %>
+                <div>
+                    <b><%= msg.sender ? msg.sender.nome : "Unknown" %>:</b> <%= msg.content %> <b>(<%= msg.crDate %>)</b>
+                </div>
+            <% }) %>
+        </div> 
+        <input id="message-input" type="text" placeholder="Digite sua mensagem.">
+        <button onclick="sendMessage()">Enviar</button>
+
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chatroom.js"></script>

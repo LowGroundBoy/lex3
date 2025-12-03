@@ -120,7 +120,6 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: calc(100vh - 60px);
         padding: 20px;
        }
       #foto_perfil{
