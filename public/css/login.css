@@ -1,6 +1,7 @@
       body {
         padding: 50px;
-        font: 13px Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        font-family: 'Montserrat', sans-serif;
         background: #f0f2f5;
       }
       .error { color: red; }
