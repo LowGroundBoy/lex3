@@ -36,6 +36,13 @@
 
             <p>
                 <label class="info-label">
+                    <strong>Média atual:</strong>
+                    <%= m.nota ?? 0.0 %>
+                </label>
+            </p>
+
+            <p>
+                <label class="info-label">
                     <a href="/disciplina/<%= m.disciplina._id %>">Visualizar disciplina</a>
                 </label>
             </p>

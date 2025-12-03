@@ -80,11 +80,42 @@ body {
     }
 
     .modal{
-      width: 25px;
-      height: 25px;
-      background-color: bisque;
+      position: fixed;
+      gap: 20px;
+      width: 25vw;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: none;
       z-index: 1000;
     }
 
-    
+    .modal.active {
+        display: block;
+    }
+
+    .notas-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    background: white;
+  }
+
+    .notas-table th {
+      background: #3897cd;
+      color: white;
+      padding: 8px;
+    }
+
+    .notas-table td {
+      padding: 10px;
+    }
+
+    .notas-table input {
+      width: 80%;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+      text-align: center;
+    }

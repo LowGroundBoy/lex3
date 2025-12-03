@@ -279,4 +279,24 @@ router.get("/chatroom/:chat_id", restrict, async (req: Request, res: Response) =
     return res.render("chatroom", { title: "Chat da disciplina", chat_id, currentuser, messages: chat.messages})
 })
 
+router.post("/update_nota", teacherRestrict, async (req: Request, res: Response) => {
+    const g1 = Number(req.body.g1);
+    const g2 = Number(req.body.g2);
+    const matriculaId = req.body.matriculaId;
+
+    const media = (g1 + g2) / 2;
+
+    console.log(media)
+    console.log("tetando atualizar")
+
+    const atualizarnota = await MatriculasDB.findByIdAndUpdate(
+        matriculaId,
+        {nota: media}
+    );
+    if (!atualizarnota) { return res.sendStatus(418) }
+
+    console.log("nota atualizada")
+    return res.sendStatus(200);
+});
+
 export default router;

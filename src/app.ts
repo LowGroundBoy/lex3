@@ -32,10 +32,11 @@ app.use(function(req, res, next){
   next();
 });
 
-app.use(routes);
+app.use(express.json());
 app.use(express.static("public")); // CSS e JS pra paginas
 app.use("/videos", express.static("uploads/videos")); // uploads
 app.use("/pdfs", express.static("uploads/pdf"));
+app.use(routes);
 
 
 // UPLOAD CONFIG
