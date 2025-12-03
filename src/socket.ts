@@ -20,7 +20,6 @@ export function socketSetup(server: HttpServer){
              )
 
             io.to(data.chatId).emit("newMsg", msg);
-            console.log("message received")
         })
     })
 }

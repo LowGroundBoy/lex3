@@ -14,7 +14,7 @@
     <div id="chat-window">
         <% messages.forEach(msg => { %>
             <div>
-                <%= msg.sender ? msg.sender.nome : "Unknown" %>: <%= msg.content %>
+                <%= msg.sender ? msg.sender.nome : "Unknown" %>: <%= msg.content %> (<%= msg.crDate %>)
             </div>
         <% }) %>
     </div> 
