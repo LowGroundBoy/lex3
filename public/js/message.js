@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("mensagem");
+    const closeBtn = document.querySelector('.close-button');
 
-    if (modal) {
-        modal.addEventListener("click", () => {
-            modal.style.display = "none";
-        })
-    };
+    closeBtn.onclick = () => modal.style.display = 'none';
 })  

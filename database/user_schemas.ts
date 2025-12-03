@@ -47,9 +47,9 @@ userSchema.methods.get_profile = function(this: IUser) {
 export const UserDB = mongoose.model<IUser>('User', userSchema);
 // PROFESSOR HERDA USERS
 export const Professor = UserDB.discriminator<IUser>("Professor", new Schema({
-    // material de aula, imagens? texto?
+   
 }));
 // ALUNO HERDA USERS
 export const Aluno = UserDB.discriminator<IUser>("Aluno", new Schema({
-    semestre: Number, // FIXME: REMOVER CADEIRAS MATRICULADAS EM FAVOR DO MATRICULADB
+    semestre: Number, 
 }));

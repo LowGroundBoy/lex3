@@ -78,3 +78,13 @@ body {
       border: 1px solid rgb(158, 158, 158);
       text-align: center;
     }
+
+    .modal{
+      width: 25px;
+      height: 25px;
+      background-color: bisque;
+      display: none;
+      z-index: 1000;
+    }
+
+    

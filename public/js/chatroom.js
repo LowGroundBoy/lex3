@@ -1,7 +1,7 @@
 let socket;
 
-function initChat(chatId, userId) {
-    socket = io();
+function initChat(chatId, sendername) {
+    socket = io("http://localhost:3001");
 
     socket.on("connect", () => console.log("connected to server"));
 

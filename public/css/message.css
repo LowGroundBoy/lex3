@@ -26,3 +26,9 @@
     padding: 7px;
     z-index: 999;
 }
+
+.close-button { 
+    cursor: pointer; 
+    float: right; 
+    font-size: 20px; 
+}

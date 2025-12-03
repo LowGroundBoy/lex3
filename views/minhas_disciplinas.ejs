@@ -15,40 +15,38 @@
     <div class="pagina">
       <h1>Disciplinas</h1>
 
-    <% if(minhas_disciplinas) { %> 
-      <% for (let disciplina of minhas_disciplinas) { %>
-        <a href="/disciplina/<%= disciplina._id %>"
-          class="card"
-          style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
-          <p>
-            <label class="info-label">
-              <strong>Disciplina:</strong> <%= disciplina.nomeDisciplina %>
-            </label>
-          </p>
-          <p>
-            <label class="info-label">
-              <strong>Professor:</strong> 
-              <%= disciplina.professorResponsavel  %>
-            </label>
-<<<<<<< HEAD
-          </p>           
-        </a> 
+<% if (alunoDoc && alunoDoc.length > 0) { %>
+    <% for (const m of alunoDoc) { %>
+        <a href="/disciplina/<%= m.disciplina._id %>"
+           class="card"
+           style="--cor-linha: hsl(<%= Math.floor(Math.random()*360) %>, 70%, 50%);">
 
-=======
-          </p>
-          <p>            
-          <label class="info-label">
-              <a href="/disciplina/<%= disciplina._id %>"> Visualizar disciplina </a> 
-            </label></p>
-        </fieldset> 
->>>>>>> backend-sprint3
+            <p>
+                <label class="info-label">
+                    <strong>Disciplina:</strong> <%= m.disciplina.nomeDisciplina %>
+                </label>
+            </p>
+
+            <p>
+                <label class="info-label">
+                    <strong>Professor:</strong>
+                    <%= m.disciplina.professorResponsavel.nome %>
+                </label>
+            </p>
+
+            <p>
+                <label class="info-label">
+                    <a href="/disciplina/<%= m.disciplina._id %>">Visualizar disciplina</a>
+                </label>
+            </p>
+
+        </a>
+
         <br>
-      <% } %>
-    <% } else { %>
-      <p>nothing to show here</p>
     <% } %>
-
-    </div>
+<% } else { %>
+    <p>nothing to show here</p>
+<% } %>
 
   </body>
 </html>

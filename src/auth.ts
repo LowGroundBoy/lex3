@@ -1,7 +1,8 @@
 import session from "express-session";
 import express, { NextFunction, Request, Response } from "express";
 import { Aluno, Professor, UserDB } from "../database/user_schemas";
-import { Document } from "mongoose";
+import { DisciplinasDB } from "../database/disciplinas_schemas";
+import { MatriculasDB } from "../database/matriculas_schemas";
 import bcrypt from "bcrypt"
 
 // AUTENTICAR SENHA
@@ -10,20 +11,16 @@ export async function authenticate(
     input_password: string, 
     callback: (err: Error | null, user: string | null, acess: string | null) => void) 
     {
-    console.log("fazendo tentativas de login para usuario %s e com senha %s", input_username, input_password);
 
     const matched_user = await UserDB.findOne({username: input_username});
 
     if (matched_user){
-        console.log("match de usuario")
         const match = await bcrypt.compare(input_password, matched_user.hash);
         if (match) { 
-            console.log("retornando usuario: " + matched_user.Tipo + matched_user._id!.toString())
             return callback(null, matched_user._id!.toString(), matched_user.Tipo!); } 
         return callback(null,null,null);
     }
     else { 
-        console.log("senha errada")
         return callback(null, null, null); }
 }
 
@@ -33,7 +30,7 @@ export function restrict(req: Request, res: Response, next: NextFunction){
         next(); // se o usuário está autenticado, continua
     }
     else {
-        req.session.error = "Acesso negado.";
+        req.session.error = "Acesso restrito a usuários logados.";
         res.redirect("/login");
     };
 }
@@ -41,10 +38,20 @@ export function restrict(req: Request, res: Response, next: NextFunction){
 export function teacherRestrict(req: Request, res: Response, next: NextFunction){
     if (req.session.accesslvl === "Professor") { next(); }
     else { 
-        req.session.error = "Acesso negado.";
+        req.session.error = "Acesso restrito a professores.";
         if (req.session.user) { res.redirect("/perfil"); }
         else { res.redirect("/login") };
     };
+}
+
+export async function disciplinaRestrict(req: Request, res: Response, next: NextFunction){
+    const userdoc = await UserDB.findById(req.session.user);
+    const disciplina = await DisciplinasDB.findOne({_id: req.params.disciplina_id});
+
+    const checkmatricula = await DisciplinasDB.find({aluno: userdoc, disciplina: disciplina})
+    if (!checkmatricula) { return req.session.error = "Você não está matriculado nessa disciplina. "}
+
+    next();
 }
 
 // CRIAR USUÁRIO
