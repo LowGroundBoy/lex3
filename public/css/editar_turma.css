@@ -1,6 +1,7 @@
 body {
       margin: 0;
-      font: 13px Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      font-family: 'Montserrat', sans-serif;
       background: #f0f2f5;
     }
     .error { color: red; }
@@ -9,6 +10,7 @@ body {
       text-align: center;
     }
     .button {
+    font-family: 'Montserrat', sans-serif;
     text-decoration: none;
     font-size: 120%;
     color: white;
@@ -64,11 +66,19 @@ body {
       border: 1px solid #d0d0d0;
       padding: 10px;
       text-align: center;
+      transition: 0.5s;
+    }
+    td:hover {
+      background-color: rgb(227, 235, 240);
     }
     th {
       background-color: rgb(56, 151, 205);
       color: white;
       font-weight: bold;
+      transition: 0.5s;
+    }
+    th:hover {
+      background-color: rgb(48, 122, 164);
     }
     td input {
       width: 60px;
